@@ -237,7 +237,7 @@
       margin: 6px 4px 12px 4px;
     }
 
-    /* Side-by-side Images (Google Drive links) */
+    /* Side-by-side Images */
     .image-container {
       display: flex;
       justify-content: center;
@@ -326,7 +326,7 @@
       transform: scale(0.97);
     }
 
-    /* Post-Audio Order: Trung Dẫn -> Chú Khởi Động -> Lời Khẳng Định -> Kết Dẫn */
+    /* Post-Audio Order */
     .trung-dan {
       color: var(--text-peach);
       text-align: center;
@@ -365,7 +365,7 @@
 </head>
 <body>
 
-  <!-- Sticky Header Controls -->
+  <!-- Sticky Header -->
   <header>
     <div class="header-bar">
       <span class="app-title">Hoa Nghiêm Thủ Nhãn</span>
@@ -373,13 +373,13 @@
     </div>
     <div class="controls-grid">
       <select id="sttSelect" class="custom-select" onchange="handleFilterSort()">
-        <option value="">Đang tải danh sách thứ tự...</option>
+        <option value="">Đang tải danh sách bộ lọc...</option>
       </select>
       <input 
         type="search" 
         id="searchInput" 
         class="search-box" 
-        placeholder="🔍 Tìm theo tên, chú, pháp bảo..." 
+        placeholder="🔍 Tìm kiếm theo tên, chú, pháp bảo..." 
         oninput="handleFilterSort()"
       />
     </div>
@@ -389,32 +389,29 @@
   <main id="app">
     <div class="status-box" id="statusBox">
       <div class="spinner"></div>
-      Đang tải dữ liệu trực tiếp từ Google Sheet...
+      Đang kết nối Google Sheet...
     </div>
   </main>
 
   <script>
-    // Live Sheet configuration pointing to tab WBSID
     const SHEET_ID = '1Gvl7SNXhVSrKBJiPgt78T2opWckb5OO59S-q_4S6Y7w';
     const TAB_NAME = 'WBSID';
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(TAB_NAME)}`;
 
     let allRows = [];
     let headers = [];
-    let sttColumns = [];
+    let filterOptions = []; // Array of { key: string, label: string, count: number }
 
-    // Helper: Convert Google Drive link or ID into a direct mobile-ready image thumbnail
+    // Google Drive direct image URL helper
     function getDriveDirectImageUrl(urlOrId) {
       if (!urlOrId) return '';
       const str = String(urlOrId).trim();
       if (!str) return '';
 
-      // Direct Drive file ID
       if (/^[a-zA-Z0-9_-]{25,}$/.test(str)) {
         return `https://drive.google.com/thumbnail?id=${str}&sz=w800`;
       }
 
-      // Regex matching common Drive URL sharing patterns
       const idMatch = str.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
                       str.match(/id=([a-zA-Z0-9_-]+)/) ||
                       str.match(/\/open\?id=([a-zA-Z0-9_-]+)/) ||
@@ -423,16 +420,15 @@
       if (idMatch && idMatch[1]) {
         return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w800`;
       }
-
       return str;
     }
 
-    // Natural alphanumeric sorting (handles E01, E02, A01, etc.)
+    // Natural alphanumeric compare (e.g. E01 < E02 < E10)
     function naturalCompare(a, b) {
       return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
     }
 
-    // Lookup column content by multiple alias keys
+    // Safe field accessor
     function getField(row, ...keys) {
       for (const k of keys) {
         if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== '') {
@@ -442,100 +438,150 @@
       return '';
     }
 
-    // 1. Fetch live Google Sheet data
     async function initSheetData() {
       try {
         const res = await fetch(GVIZ_URL);
         const text = await res.text();
-        
         const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
         const json = JSON.parse(jsonString);
 
         if (!json.table || !json.table.rows) {
-          throw new Error('Dữ liệu bảng trống hoặc không khả dụng.');
+          throw new Error('Không có dữ liệu trong bảng.');
         }
 
-        // Parse headers
-        headers = json.table.cols.map(c => (c && c.label ? c.label.trim() : ''));
-
-        // Parse rows
-        allRows = json.table.rows.map(row => {
-          const item = {};
-          if (row.c) {
-            row.c.forEach((cell, idx) => {
-              const h = headers[idx] || `col_${idx}`;
-              item[h] = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== null && cell.v !== undefined ? cell.v : '')) : '';
-            });
+        // 1. Determine column headers reliably
+        let colLabels = (json.table.cols || []).map(c => (c && c.label ? c.label.trim() : ''));
+        
+        let startRowIdx = 0;
+        // If col labels are missing from table.cols, check first row
+        const hasMissingLabels = colLabels.filter(Boolean).length < 5;
+        if (hasMissingLabels && json.table.rows.length > 0) {
+          const firstRow = json.table.rows[0].c || [];
+          const candidateLabels = firstRow.map(cell => (cell && (cell.f || cell.v) ? String(cell.f || cell.v).trim() : ''));
+          
+          if (candidateLabels.some(l => l.toUpperCase().includes('WBSID') || l.toUpperCase().includes('STT'))) {
+            colLabels = candidateLabels;
+            startRowIdx = 1; // Row 0 was the header
           }
-          return item;
-        });
+        }
 
-        // Filter all columns starting with STT- (columns M to Y)
-        sttColumns = headers.filter(h => /^STT[-_ ]/i.test(h));
+        // Fill any remaining blank header with col index (col_12 for M, col_13 for N, etc.)
+        headers = colLabels.map((lbl, idx) => lbl || `col_${idx}`);
 
+        // 2. Parse data rows
+        allRows = [];
+        for (let r = startRowIdx; r < json.table.rows.length; r++) {
+          const rowObj = {};
+          const cells = json.table.rows[r].c || [];
+          cells.forEach((cell, idx) => {
+            const h = headers[idx] || `col_${idx}`;
+            const val = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== null && cell.v !== undefined ? cell.v : '')) : '';
+            rowObj[h] = val;
+            rowObj[`idx_${idx}`] = val; // Also index by position for columns M (12) to Y (24)
+          });
+
+          // Only keep rows that have meaningful content
+          const hasContent = Object.values(rowObj).some(v => String(v).trim() !== '');
+          if (hasContent) {
+            allRows.push(rowObj);
+          }
+        }
+
+        // 3. Scan & build STT filter list
+        discoverFilters();
         buildDropdown();
         handleFilterSort();
 
       } catch (err) {
         console.error(err);
         document.getElementById('statusBox').innerHTML = `
-          <p style="color:#ef5350; font-weight:700;">Không thể tải dữ liệu từ Google Sheet</p>
-          <p style="font-size:0.85rem; margin-top:8px;">Vui lòng kiểm tra tab "${TAB_NAME}" và quyền chia sẻ công khai của file.</p>
+          <p style="color:#ef5350; font-weight:700;">Không thể tải dữ liệu</p>
+          <p style="font-size:0.85rem; margin-top:8px;">Vui lòng kiểm tra quyền chia sẻ công khai của file Google Sheet.</p>
         `;
       }
     }
 
-    // 2. Build STT Filter Dropdown
+    function discoverFilters() {
+      filterOptions = [];
+      const foundKeys = new Set();
+
+      // Strategy A: Header name contains 'STT'
+      headers.forEach((h, idx) => {
+        if (/STT/i.test(h) && !foundKeys.has(h)) {
+          const count = allRows.filter(r => String(r[h] || '').trim() !== '').length;
+          if (count > 0) {
+            foundKeys.add(h);
+            filterOptions.push({ key: h, label: h, count: count });
+          }
+        }
+      });
+
+      // Strategy B: Guarantee columns M to Y (indices 12 to 24) are scanned
+      for (let i = 12; i <= 24; i++) {
+        const headerName = headers[i];
+        const idxKey = `idx_${i}`;
+        const keyToUse = (headerName && !headerName.startsWith('col_')) ? headerName : idxKey;
+
+        if (!foundKeys.has(keyToUse)) {
+          const count = allRows.filter(r => String(r[keyToUse] || '').trim() !== '').length;
+          if (count > 0) {
+            foundKeys.add(keyToUse);
+            const colLetter = String.fromCharCode(65 + i);
+            const label = headerName && !headerName.startsWith('col_') ? headerName : `STT-${colLetter} (Cột ${colLetter})`;
+            filterOptions.push({ key: keyToUse, label: label, count: count });
+          }
+        }
+      }
+    }
+
     function buildDropdown() {
       const select = document.getElementById('sttSelect');
       select.innerHTML = '';
 
+      // Default option
       const allOpt = document.createElement('option');
       allOpt.value = '__ALL__';
-      allOpt.textContent = '📋 Xem tất cả (Toàn bộ Thủ Nhãn)';
+      allOpt.textContent = `📋 Xem tất cả (${allRows.length} thẻ)`;
       select.appendChild(allOpt);
 
-      sttColumns.forEach(col => {
+      filterOptions.forEach(optData => {
         const opt = document.createElement('option');
-        opt.value = col;
-        opt.textContent = `🎯 Bộ lọc: ${col}`;
+        opt.value = optData.key;
+        opt.textContent = `🎯 ${optData.label} (${optData.count} thẻ)`;
         select.appendChild(opt);
       });
 
-      if (sttColumns.length > 0) {
-        select.value = sttColumns[0];
+      // Default to the first STT filter
+      if (filterOptions.length > 0) {
+        select.value = filterOptions[0].key;
       }
     }
 
-    // 3. Filter, Sort, Search, and Render Cards
     function handleFilterSort() {
-      const selectedCol = document.getElementById('sttSelect').value || '__ALL__';
+      const selectedKey = document.getElementById('sttSelect').value || '__ALL__';
       const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
       const app = document.getElementById('app');
 
       let list = [];
 
-      // Step A: STT Filter & Sort
-      if (selectedCol === '__ALL__') {
+      if (selectedKey === '__ALL__') {
         list = [...allRows];
       } else {
         list = allRows
           .filter(r => {
-            const v = r[selectedCol];
+            const v = r[selectedKey];
             return v !== undefined && v !== null && String(v).trim() !== '';
           })
-          .sort((a, b) => naturalCompare(a[selectedCol], b[selectedCol]));
+          .sort((a, b) => naturalCompare(a[selectedKey], b[selectedKey]));
       }
 
-      // Step B: Text Search across card fields
       if (searchVal) {
         list = list.filter(r => {
-          const combinedText = Object.values(r).join(' ').toLowerCase();
-          return combinedText.includes(searchVal);
+          const combined = Object.values(r).join(' ').toLowerCase();
+          return combined.includes(searchVal);
         });
       }
 
-      // Update counter pill
       document.getElementById('counterPill').textContent = `${list.length} / ${allRows.length}`;
 
       if (list.length === 0) {
@@ -543,29 +589,26 @@
         return;
       }
 
-      // Step C: Render Card HTML
       app.innerHTML = list.map(row => {
-        const sttVal = selectedCol !== '__ALL__' ? row[selectedCol] : '';
-        const wbsid = getField(row, 'WBSID', 'Mã WBSID', 'Title (WBSID)');
-        const a2Ly = getField(row, 'A2 Lý', 'Lý');
-        const c5Name = getField(row, 'C5 Thủ Nhãn-Tên', 'C5 Tên Thủ Nhãn', 'C5 Thủ Nhãn', 'C5');
-        const c1 = getField(row, 'C1 Tên CTT', 'C1 CTT', 'C1');
-        const c4 = getField(row, 'C4 Siddham Unicode', 'C4 Siddham', 'C4');
+        const sttVal = selectedKey !== '__ALL__' ? row[selectedKey] : '';
+        const wbsid = getField(row, 'WBSID', 'Mã WBSID', 'Title (WBSID)', 'idx_0');
+        const a2Ly = getField(row, 'A2 Lý', 'Lý', 'idx_6');
+        const c5Name = getField(row, 'C5 Thủ Nhãn-Tên', 'C5 Tên Thủ Nhãn', 'C5 Thủ Nhãn', 'C5', 'idx_1');
+        const c1 = getField(row, 'C1 Tên CTT', 'C1 CTT', 'C1', 'idx_2');
+        const c4 = getField(row, 'C4 Siddham Unicode', 'C4 Siddham', 'C4', 'idx_5');
         const dharma = getField(row, 'C5 Dharma Object Name', 'Dharma Object Name');
-        const c2 = getField(row, 'C2 Tên Dài CTT', 'C2 Dài CTT', 'C2');
-        const c3 = getField(row, 'C3 Giảng Giải CTT', 'C3 Giảng Giải', 'C3');
+        const c2 = getField(row, 'C2 Tên Dài CTT', 'C2 Dài CTT', 'C2', 'idx_3');
+        const c3 = getField(row, 'C3 Giảng Giải CTT', 'C3 Giảng Giải', 'C3', 'idx_4');
 
-        // Images from Google Drive Links
         const imgCTT = getDriveDirectImageUrl(getField(row, 'C4 CTT Link', 'CTT Link', 'CTT-Link'));
         const imgPhapBao = getDriveDirectImageUrl(getField(row, 'C5 Pháp Bảo Link', 'Pháp Bảo Link', 'Phap Bao Link'));
 
-        const a3KhaiDan = getField(row, 'A3 Khai Dẫn', 'Khai Dẫn');
-        const a4Hanh = getField(row, 'A4 Hành', 'Hành');
-        const a4HanhA = getField(row, 'A4 Hành A', 'Hành A');
-        const a4HanhB = getField(row, 'A4 Hành B', 'Hành B');
-        const d1Voice = getField(row, 'D1 Van Voice', 'D1 Voice', 'D1');
+        const a3KhaiDan = getField(row, 'A3 Khai Dẫn', 'Khai Dẫn', 'idx_7');
+        const a4Hanh = getField(row, 'A4 Hành', 'Hành', 'idx_8');
+        const a4HanhA = getField(row, 'A4 Hành A', 'Hành A', 'idx_9');
+        const a4HanhB = getField(row, 'A4 Hành B', 'Hành B', 'idx_10');
+        const d1Voice = getField(row, 'D1 Van Voice', 'D1 Voice', 'D1', 'idx_11');
 
-        // Post-audio order: A5 -> A6 -> A8 -> A9
         const a5TrungDan = getField(row, 'A5 Trung Dẫn', 'Trung Dẫn');
         const a6ChuKD = getField(row, 'A6 Chú Khởi Động', 'Chú Khởi Động');
         const a8LoiKD = getField(row, 'A8 Lời Khẳng Định', 'Lời Khẳng Định');
@@ -574,7 +617,7 @@
         return `
           <div class="card">
             
-            <!-- Metadata: WBSID + STT Filter Value -->
+            <!-- Top Row: WBSID & STT badge -->
             <div class="card-top-row">
               ${wbsid ? `<span class="wbsid-pill">${wbsid}</span>` : `<span></span>`}
               ${sttVal ? `<span class="stt-pill">${sttVal}</span>` : ''}
@@ -583,7 +626,7 @@
             <!-- Top: A2 Lý -->
             ${a2Ly ? `<p class="top-ly">${a2Ly}</p>` : ''}
 
-            <!-- Title: Thủ Nhãn + CTT + Siddham -->
+            <!-- Label: Thủ Nhãn + CTT + Siddham -->
             <p class="card-label">
               <span class="tên">${c5Name}</span>
               ${c1 ? `<span class="separator">–</span><span class="CTT">${c1}</span>` : ''}
@@ -599,7 +642,7 @@
             <!-- Giảng Giải CTT -->
             ${c3 ? `<p class="chu-thich">${c3}</p>` : ''}
 
-            <!-- Images (Google Drive links) -->
+            <!-- Google Drive Images -->
             ${(imgCTT || imgPhapBao) ? `
               <div class="image-container">
                 ${imgCTT ? `<img src="${imgCTT}" class="card-img" alt="CTT" loading="lazy" onerror="this.style.display='none'"/>` : ''}
@@ -613,7 +656,7 @@
             <!-- Hành Header -->
             ${a4Hanh ? `<h5 class="chu-header">${a4Hanh}</h5>` : ''}
 
-            <!-- Hành A & Hành B -->
+            <!-- Hành A & B -->
             ${(a4HanhA || a4HanhB) ? `
               <div class="data-container">
                 ${a4HanhA ? `<div class="chu-col">${a4HanhA}</div>` : ''}
@@ -621,7 +664,7 @@
               </div>
             ` : ''}
 
-            <!-- Audio/YouTube Button -->
+            <!-- YouTube Voice Button -->
             ${d1Voice ? `
               <div class="button-container">
                 <a href="${d1Voice}" target="_blank" rel="noopener noreferrer" class="youtube-btn">
@@ -630,7 +673,7 @@
               </div>
             ` : ''}
 
-            <!-- Post-Audio Sequence: A5 -> A6 -> A8 -> A9 -->
+            <!-- Post-Audio Order: A5 -> A6 -> A8 -> A9 -->
             ${a5TrungDan ? `<p class="trung-dan">${a5TrungDan}</p>` : ''}
             ${a6ChuKD ? `<p class="chu-KD">${a6ChuKD}</p>` : ''}
             ${a8LoiKD ? `<p class="KD">${a8LoiKD}</p>` : ''}
@@ -641,8 +684,8 @@
       }).join('');
     }
 
-    // Launch on load
     window.addEventListener('DOMContentLoaded', initSheetData);
   </script>
 </body>
 </html>
+
