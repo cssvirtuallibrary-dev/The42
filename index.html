@@ -8,7 +8,7 @@
   <!-- Google Fonts: Siddham & Vietnamese support -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Siddham&family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Siddham&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -17,10 +17,11 @@
       --card-border: rgba(255, 255, 255, 0.08);
       --text-purple: #ce93d8;
       --text-gold: #ffecb3;
-      --text-gold-subtle: #ffe082;
+      --text-gold-bright: #ffe082;
       --text-green: #81c784;
       --text-light-green: #c8e6c9;
-      --text-peach: #ffccbc;
+      --text-peach-soft: #ffccbc;
+      --text-orange-bold: #ffab91;
       --text-muted: #90a4ae;
       --yt-red: #e50914;
     }
@@ -131,43 +132,37 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Card Styling */
+    /* Card Item */
     .card {
       background: var(--card-bg);
-      border-radius: 16px;
+      border-radius: 18px;
       border: 1px solid var(--card-border);
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-      padding: 16px 14px;
+      padding: 16px 14px 20px 14px;
       margin-bottom: 20px;
       position: relative;
     }
 
-    /* Top Metadata Pill Row */
+    /* Top Row with Right-Aligned Pill */
     .card-top-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
-    .wbsid-pill {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.05);
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-family: monospace;
-      font-weight: 600;
-    }
-
-    .stt-pill {
+    .combo-pill {
       font-size: 0.82rem;
-      background: rgba(255, 236, 179, 0.12);
       color: var(--text-gold);
-      border: 1px solid rgba(255, 236, 179, 0.3);
-      padding: 2px 10px;
+      background: rgba(255, 236, 179, 0.12);
+      border: 1px solid rgba(255, 236, 179, 0.28);
+      padding: 3px 10px;
       border-radius: 12px;
       font-weight: 700;
+      letter-spacing: 0.2px;
+      max-width: 85%;
+      text-align: right;
+      word-break: break-word;
     }
 
     /* Top: A2 Lý */
@@ -176,25 +171,25 @@
       color: #a5d6a7;
       text-align: center;
       font-size: clamp(0.9rem, 3.4vw, 1.05rem);
-      line-height: 1.4;
-      margin: 4px 0 10px 0;
-      padding: 0 4px;
+      line-height: 1.45;
+      margin: 2px 0 10px 0;
+      padding: 0 6px;
     }
 
-    /* Title: Thủ Nhãn + CTT + Siddham */
+    /* Title: C5 Tên Thủ Nhãn – C1 Tên CTT + C4 Siddham */
     .card-label {
       color: var(--text-purple);
       text-align: center;
       font-size: clamp(1.3rem, 5vw, 1.7rem);
       font-weight: 700;
       line-height: 1.3;
-      margin: 6px 0 4px 0;
+      margin: 4px 0 4px 0;
       word-break: break-word;
     }
 
     .separator {
       color: #b0bec5;
-      margin: 0 3px;
+      margin: 0 4px;
       font-weight: 300;
     }
 
@@ -234,68 +229,78 @@
       font-weight: 400;
       font-size: clamp(0.9rem, 3.2vw, 1.05rem);
       line-height: 1.45;
-      margin: 6px 4px 12px 4px;
+      margin: 6px 4px 14px 4px;
     }
 
-    /* Side-by-side Images */
+    /* Dual Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link) */
     .image-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      margin: 12px 0 14px 0;
+      gap: 12px;
+      margin: 12px 0 16px 0;
       width: 100%;
     }
 
     .card-img {
       max-width: 48%;
       height: auto;
-      max-height: 165px;
+      max-height: 170px;
       object-fit: contain;
-      border-radius: 10px;
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.03);
       padding: 4px;
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* Khai Dẫn */
-    .chi-dan {
-      color: var(--text-peach);
+    /* ==========================================================
+       LESSER EMPHASIS STYLES (A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn)
+       ========================================================== */
+    .lesser-dan {
+      color: var(--text-peach-soft);
       text-align: center;
-      font-weight: 500;
-      font-size: clamp(1.02rem, 3.8vw, 1.25rem);
-      line-height: 1.4;
-      margin: 10px 4px;
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(0.92rem, 3.4vw, 1.05rem);
+      line-height: 1.45;
+      margin: 10px 6px;
+      padding: 0 4px;
+      opacity: 0.92;
     }
 
-    /* Hành Header */
+    /* ==========================================================
+       HIGH EMPHASIS STYLES (A4 Hành, A4 Hành A/B, A6 Chú KD, A8 Lời KĐ)
+       ========================================================== */
+    /* A4 Hành */
     .chu-header {
-      color: var(--text-gold-subtle);
+      color: var(--text-gold-bright);
       text-align: center;
-      font-weight: 700;
-      font-size: clamp(1.1rem, 4.2vw, 1.35rem);
-      margin: 12px 0 6px 0;
+      font-weight: 800;
+      font-size: clamp(1.15rem, 4.4vw, 1.4rem);
+      margin: 14px 0 8px 0;
+      letter-spacing: 0.3px;
     }
 
-    /* Hành A & Hành B */
+    /* A4 Hành A & B */
     .data-container {
       display: flex;
       justify-content: space-between;
       gap: 10px;
-      margin: 6px 0 14px 0;
+      margin: 8px 0 14px 0;
     }
 
     .chu-col {
       flex: 1;
-      color: var(--text-gold);
+      color: #fff3d0;
       text-align: center;
-      font-weight: 600;
-      font-size: clamp(0.92rem, 3.5vw, 1.1rem);
-      line-height: 1.3;
-      background: rgba(255, 236, 179, 0.05);
-      padding: 10px 8px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 236, 179, 0.12);
+      font-weight: 700;
+      font-size: clamp(0.95rem, 3.6vw, 1.15rem);
+      line-height: 1.35;
+      background: rgba(255, 236, 179, 0.08);
+      padding: 12px 10px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255, 236, 179, 0.22);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       word-break: break-word;
     }
 
@@ -326,46 +331,40 @@
       transform: scale(0.97);
     }
 
-    /* Post-Audio Order */
-    .trung-dan {
-      color: var(--text-peach);
+    /* A6 Chú Khởi Động (High emphasis) */
+    .chu-KD-bold {
+      color: var(--text-orange-bold);
       text-align: center;
-      font-size: clamp(0.95rem, 3.6vw, 1.15rem);
-      line-height: 1.4;
-      margin: 12px 4px 6px 4px;
-    }
-
-    .chu-KD {
-      color: #ffab91;
-      text-align: center;
-      font-weight: 600;
-      font-size: clamp(1.05rem, 4vw, 1.3rem);
+      font-weight: 800;
+      font-size: clamp(1.12rem, 4.3vw, 1.38rem);
       line-height: 1.35;
-      margin: 10px 0 6px 0;
+      margin: 14px 0 8px 0;
+      padding: 6px 8px;
+      background: rgba(255, 171, 145, 0.08);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 171, 145, 0.2);
+      word-break: break-word;
     }
 
-    .KD {
+    /* A8 Lời Khẳng Định (High emphasis) */
+    .KD-bold {
       color: var(--text-light-green);
       text-align: center;
-      font-weight: 700;
-      font-size: clamp(1.1rem, 4.2vw, 1.35rem);
+      font-weight: 800;
+      font-size: clamp(1.15rem, 4.4vw, 1.4rem);
       line-height: 1.35;
-      margin: 10px 0 6px 0;
-    }
-
-    .ket-dan {
-      color: var(--text-gold);
-      text-align: center;
-      font-weight: 500;
-      font-size: clamp(0.95rem, 3.6vw, 1.15rem);
-      line-height: 1.4;
-      margin: 10px 4px 4px 4px;
+      margin: 10px 0 10px 0;
+      padding: 6px 8px;
+      background: rgba(200, 230, 201, 0.08);
+      border-radius: 8px;
+      border: 1px solid rgba(200, 230, 201, 0.22);
+      word-break: break-word;
     }
   </style>
 </head>
 <body>
 
-  <!-- Sticky Header -->
+  <!-- Sticky Header Controls -->
   <header>
     <div class="header-bar">
       <span class="app-title">Hoa Nghiêm Thủ Nhãn</span>
@@ -379,7 +378,7 @@
         type="search" 
         id="searchInput" 
         class="search-box" 
-        placeholder="🔍 Tìm kiếm theo tên, chú, pháp bảo..." 
+        placeholder="🔍 Tìm theo tên, chú, pháp bảo..." 
         oninput="handleFilterSort()"
       />
     </div>
@@ -400,9 +399,9 @@
 
     let allRows = [];
     let headers = [];
-    let filterOptions = []; // Array of { key: string, label: string, count: number }
+    let filterOptions = [];
 
-    // Google Drive direct image URL helper
+    // Google Drive direct image URL parser
     function getDriveDirectImageUrl(urlOrId) {
       if (!urlOrId) return '';
       const str = String(urlOrId).trim();
@@ -428,7 +427,7 @@
       return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
     }
 
-    // Safe field accessor
+    // Lookup cell content safely
     function getField(row, ...keys) {
       for (const k of keys) {
         if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== '') {
@@ -438,6 +437,7 @@
       return '';
     }
 
+    // 1. Fetch live sheet data
     async function initSheetData() {
       try {
         const res = await fetch(GVIZ_URL);
@@ -449,26 +449,24 @@
           throw new Error('Không có dữ liệu trong bảng.');
         }
 
-        // 1. Determine column headers reliably
+        // Determine column labels with fallback to row 0 if labels are blank
         let colLabels = (json.table.cols || []).map(c => (c && c.label ? c.label.trim() : ''));
-        
         let startRowIdx = 0;
-        // If col labels are missing from table.cols, check first row
+
         const hasMissingLabels = colLabels.filter(Boolean).length < 5;
         if (hasMissingLabels && json.table.rows.length > 0) {
           const firstRow = json.table.rows[0].c || [];
           const candidateLabels = firstRow.map(cell => (cell && (cell.f || cell.v) ? String(cell.f || cell.v).trim() : ''));
           
-          if (candidateLabels.some(l => l.toUpperCase().includes('WBSID') || l.toUpperCase().includes('STT'))) {
+          if (candidateLabels.some(l => /WBSID|STT/i.test(l))) {
             colLabels = candidateLabels;
-            startRowIdx = 1; // Row 0 was the header
+            startRowIdx = 1;
           }
         }
 
-        // Fill any remaining blank header with col index (col_12 for M, col_13 for N, etc.)
         headers = colLabels.map((lbl, idx) => lbl || `col_${idx}`);
 
-        // 2. Parse data rows
+        // Parse data rows
         allRows = [];
         for (let r = startRowIdx; r < json.table.rows.length; r++) {
           const rowObj = {};
@@ -477,17 +475,16 @@
             const h = headers[idx] || `col_${idx}`;
             const val = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== null && cell.v !== undefined ? cell.v : '')) : '';
             rowObj[h] = val;
-            rowObj[`idx_${idx}`] = val; // Also index by position for columns M (12) to Y (24)
+            rowObj[`idx_${idx}`] = val;
           });
 
-          // Only keep rows that have meaningful content
+          // Keep rows with content (exclude sort helper from causing false positives)
           const hasContent = Object.values(rowObj).some(v => String(v).trim() !== '');
           if (hasContent) {
             allRows.push(rowObj);
           }
         }
 
-        // 3. Scan & build STT filter list
         discoverFilters();
         buildDropdown();
         handleFilterSort();
@@ -495,19 +492,20 @@
       } catch (err) {
         console.error(err);
         document.getElementById('statusBox').innerHTML = `
-          <p style="color:#ef5350; font-weight:700;">Không thể tải dữ liệu</p>
-          <p style="font-size:0.85rem; margin-top:8px;">Vui lòng kiểm tra quyền chia sẻ công khai của file Google Sheet.</p>
+          <p style="color:#ef5350; font-weight:700;">Không thể tải dữ liệu từ Google Sheet</p>
+          <p style="font-size:0.85rem; margin-top:8px;">Vui lòng kiểm tra tab "${TAB_NAME}" và quyền chia sẻ của file.</p>
         `;
       }
     }
 
+    // 2. Discover STT-xxx filter columns (Columns M to Y / 12 to 24)
     function discoverFilters() {
       filterOptions = [];
       const foundKeys = new Set();
 
-      // Strategy A: Header name contains 'STT'
+      // Check named STT headers (ignoring generic helper columns)
       headers.forEach((h, idx) => {
-        if (/STT/i.test(h) && !foundKeys.has(h)) {
+        if (/STT[-_ ]/i.test(h) && !/sort|helper/i.test(h) && !foundKeys.has(h)) {
           const count = allRows.filter(r => String(r[h] || '').trim() !== '').length;
           if (count > 0) {
             foundKeys.add(h);
@@ -516,29 +514,29 @@
         }
       });
 
-      // Strategy B: Guarantee columns M to Y (indices 12 to 24) are scanned
+      // Ensure all columns M to Y (indices 12 to 24) are scanned
       for (let i = 12; i <= 24; i++) {
         const headerName = headers[i];
         const idxKey = `idx_${i}`;
         const keyToUse = (headerName && !headerName.startsWith('col_')) ? headerName : idxKey;
 
-        if (!foundKeys.has(keyToUse)) {
+        if (!foundKeys.has(keyToUse) && !/sort|helper/i.test(keyToUse)) {
           const count = allRows.filter(r => String(r[keyToUse] || '').trim() !== '').length;
           if (count > 0) {
             foundKeys.add(keyToUse);
             const colLetter = String.fromCharCode(65 + i);
-            const label = headerName && !headerName.startsWith('col_') ? headerName : `STT-${colLetter} (Cột ${colLetter})`;
+            const label = headerName && !headerName.startsWith('col_') ? headerName : `STT-${colLetter}`;
             filterOptions.push({ key: keyToUse, label: label, count: count });
           }
         }
       }
     }
 
+    // 3. Populate dropdown
     function buildDropdown() {
       const select = document.getElementById('sttSelect');
       select.innerHTML = '';
 
-      // Default option
       const allOpt = document.createElement('option');
       allOpt.value = '__ALL__';
       allOpt.textContent = `📋 Xem tất cả (${allRows.length} thẻ)`;
@@ -551,12 +549,12 @@
         select.appendChild(opt);
       });
 
-      // Default to the first STT filter
       if (filterOptions.length > 0) {
         select.value = filterOptions[0].key;
       }
     }
 
+    // 4. Filter, Sort, and Render
     function handleFilterSort() {
       const selectedKey = document.getElementById('sttSelect').value || '__ALL__';
       const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -590,8 +588,19 @@
       }
 
       app.innerHTML = list.map(row => {
-        const sttVal = selectedKey !== '__ALL__' ? row[selectedKey] : '';
         const wbsid = getField(row, 'WBSID', 'Mã WBSID', 'Title (WBSID)', 'idx_0');
+        const a1Su = getField(row, 'A1 Sự', 'Sự', 'A1');
+        
+        // Build Top Right Pill: "WBSID – A1 Sự"
+        let comboPill = '';
+        if (wbsid && a1Su) {
+          comboPill = `${wbsid} – ${a1Su}`;
+        } else if (wbsid) {
+          comboPill = wbsid;
+        } else if (a1Su) {
+          comboPill = a1Su;
+        }
+
         const a2Ly = getField(row, 'A2 Lý', 'Lý', 'idx_6');
         const c5Name = getField(row, 'C5 Thủ Nhãn-Tên', 'C5 Tên Thủ Nhãn', 'C5 Thủ Nhãn', 'C5', 'idx_1');
         const c1 = getField(row, 'C1 Tên CTT', 'C1 CTT', 'C1', 'idx_2');
@@ -600,33 +609,35 @@
         const c2 = getField(row, 'C2 Tên Dài CTT', 'C2 Dài CTT', 'C2', 'idx_3');
         const c3 = getField(row, 'C3 Giảng Giải CTT', 'C3 Giảng Giải', 'C3', 'idx_4');
 
-        const imgCTT = getDriveDirectImageUrl(getField(row, 'C4 CTT Link', 'CTT Link', 'CTT-Link'));
-        const imgPhapBao = getDriveDirectImageUrl(getField(row, 'C5 Pháp Bảo Link', 'Pháp Bảo Link', 'Phap Bao Link'));
+        // Left Image: C4 CTT Link | Right Image: C6 Pháp Bảo Link
+        const imgLeft = getDriveDirectImageUrl(getField(row, 'C4 CTT Link', 'CTT Link', 'CTT-Link'));
+        const imgRight = getDriveDirectImageUrl(getField(row, 'C6 Pháp Bảo Link', 'Pháp Bảo Link', 'C5 Pháp Bảo Link', 'Phap Bao Link'));
 
+        // Lesser emphasis: A3, A5, A9
         const a3KhaiDan = getField(row, 'A3 Khai Dẫn', 'Khai Dẫn', 'idx_7');
+        const a5TrungDan = getField(row, 'A5 Trung Dẫn', 'Trung Dẫn');
+        const a9KetDan = getField(row, 'A9 Kết Dẫn', 'Kết Dẫn');
+
+        // High emphasis: A4, A4 Hành A/B, A6, A8
         const a4Hanh = getField(row, 'A4 Hành', 'Hành', 'idx_8');
         const a4HanhA = getField(row, 'A4 Hành A', 'Hành A', 'idx_9');
         const a4HanhB = getField(row, 'A4 Hành B', 'Hành B', 'idx_10');
         const d1Voice = getField(row, 'D1 Van Voice', 'D1 Voice', 'D1', 'idx_11');
-
-        const a5TrungDan = getField(row, 'A5 Trung Dẫn', 'Trung Dẫn');
         const a6ChuKD = getField(row, 'A6 Chú Khởi Động', 'Chú Khởi Động');
         const a8LoiKD = getField(row, 'A8 Lời Khẳng Định', 'Lời Khẳng Định');
-        const a9KetDan = getField(row, 'A9 Kết Dẫn', 'Kết Dẫn');
 
         return `
           <div class="card">
             
-            <!-- Top Row: WBSID & STT badge -->
+            <!-- Top Right Pill: Combo WBSID - A1 Sự -->
             <div class="card-top-row">
-              ${wbsid ? `<span class="wbsid-pill">${wbsid}</span>` : `<span></span>`}
-              ${sttVal ? `<span class="stt-pill">${sttVal}</span>` : ''}
+              ${comboPill ? `<span class="combo-pill">${comboPill}</span>` : `<span></span>`}
             </div>
 
             <!-- Top: A2 Lý -->
             ${a2Ly ? `<p class="top-ly">${a2Ly}</p>` : ''}
 
-            <!-- Label: Thủ Nhãn + CTT + Siddham -->
+            <!-- Title: Thủ Nhãn + CTT + Siddham -->
             <p class="card-label">
               <span class="tên">${c5Name}</span>
               ${c1 ? `<span class="separator">–</span><span class="CTT">${c1}</span>` : ''}
@@ -642,21 +653,21 @@
             <!-- Giảng Giải CTT -->
             ${c3 ? `<p class="chu-thich">${c3}</p>` : ''}
 
-            <!-- Google Drive Images -->
-            ${(imgCTT || imgPhapBao) ? `
+            <!-- Dual Images: Left (C4 CTT Link) & Right (C6 Pháp Bảo Link) -->
+            ${(imgLeft || imgRight) ? `
               <div class="image-container">
-                ${imgCTT ? `<img src="${imgCTT}" class="card-img" alt="CTT" loading="lazy" onerror="this.style.display='none'"/>` : ''}
-                ${imgPhapBao ? `<img src="${imgPhapBao}" class="card-img" alt="Pháp Bảo" loading="lazy" onerror="this.style.display='none'"/>` : ''}
+                ${imgLeft ? `<img src="${imgLeft}" class="card-img" alt="CTT" loading="lazy" onerror="this.style.display='none'"/>` : ''}
+                ${imgRight ? `<img src="${imgRight}" class="card-img" alt="Pháp Bảo" loading="lazy" onerror="this.style.display='none'"/>` : ''}
               </div>
             ` : ''}
 
-            <!-- Khai Dẫn -->
-            ${a3KhaiDan ? `<p class="chi-dan">${a3KhaiDan}</p>` : ''}
+            <!-- A3 Khai Dẫn (Lesser emphasis) -->
+            ${a3KhaiDan ? `<p class="lesser-dan">${a3KhaiDan}</p>` : ''}
 
-            <!-- Hành Header -->
+            <!-- A4 Hành (High emphasis) -->
             ${a4Hanh ? `<h5 class="chu-header">${a4Hanh}</h5>` : ''}
 
-            <!-- Hành A & B -->
+            <!-- A4 Hành A & B (High emphasis) -->
             ${(a4HanhA || a4HanhB) ? `
               <div class="data-container">
                 ${a4HanhA ? `<div class="chu-col">${a4HanhA}</div>` : ''}
@@ -664,7 +675,7 @@
               </div>
             ` : ''}
 
-            <!-- YouTube Voice Button -->
+            <!-- YouTube Audio Button -->
             ${d1Voice ? `
               <div class="button-container">
                 <a href="${d1Voice}" target="_blank" rel="noopener noreferrer" class="youtube-btn">
@@ -673,11 +684,17 @@
               </div>
             ` : ''}
 
-            <!-- Post-Audio Order: A5 -> A6 -> A8 -> A9 -->
-            ${a5TrungDan ? `<p class="trung-dan">${a5TrungDan}</p>` : ''}
-            ${a6ChuKD ? `<p class="chu-KD">${a6ChuKD}</p>` : ''}
-            ${a8LoiKD ? `<p class="KD">${a8LoiKD}</p>` : ''}
-            ${a9KetDan ? `<p class="ket-dan">${a9KetDan}</p>` : ''}
+            <!-- A5 Trung Dẫn (Lesser emphasis) -->
+            ${a5TrungDan ? `<p class="lesser-dan">${a5TrungDan}</p>` : ''}
+
+            <!-- A6 Chú Khởi Động (High emphasis) -->
+            ${a6ChuKD ? `<p class="chu-KD-bold">${a6ChuKD}</p>` : ''}
+
+            <!-- A8 Lời Khẳng Định (High emphasis) -->
+            ${a8LoiKD ? `<p class="KD-bold">${a8LoiKD}</p>` : ''}
+
+            <!-- A9 Kết Dẫn (Lesser emphasis) -->
+            ${a9KetDan ? `<p class="lesser-dan">${a9KetDan}</p>` : ''}
 
           </div>
         `;
@@ -688,4 +705,3 @@
   </script>
 </body>
 </html>
-
