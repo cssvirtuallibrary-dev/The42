@@ -160,7 +160,7 @@
       word-break: break-word;
     }
 
-    /* Top: A2 Lý (Smaller, subtle text directly under pill) */
+    /* Top: A2 Lý (Under Pill) */
     .top-ly {
       font-style: italic;
       color: #a5d6a7;
@@ -172,7 +172,7 @@
       opacity: 0.95;
     }
 
-    /* Title: C5 Tên Thủ Nhãn – C1 Tên CTT + C4 Siddham */
+    /* Main Heading: C5 Thủ Nhãn – C1 CTT + C4 Siddham */
     .card-label {
       color: var(--text-purple);
       text-align: center;
@@ -363,7 +363,7 @@
     </div>
     <div class="controls-grid">
       <select id="sttSelect" class="custom-select" onchange="handleFilterSort()">
-        <option value="">Đang tải danh sách bộ lọc...</option>
+        <option value="">Đang tải tất cả bộ lọc...</option>
       </select>
       <input 
         type="search" 
@@ -379,7 +379,7 @@
   <main id="app">
     <div class="status-box" id="statusBox">
       <div class="spinner"></div>
-      Đang kết nối Google Sheet...
+      Đang kết nối dữ liệu Google Sheet...
     </div>
   </main>
 
@@ -391,7 +391,7 @@
     let allRows = [];
     let filterOptions = [];
 
-    // Helper: Convert Google Drive URLs/IDs to direct thumbnail images
+    // Helper: Convert Google Drive link or ID to direct thumbnail image URL
     function getDriveDirectImageUrl(urlOrId) {
       if (!urlOrId) return '';
       const str = String(urlOrId).trim();
@@ -420,7 +420,6 @@
       return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
     }
 
-    // Strict validator to avoid displaying raw numeric IDs or codes in text fields
     function cleanText(val) {
       if (val === undefined || val === null) return '';
       const s = String(val).trim();
@@ -428,7 +427,7 @@
       return s;
     }
 
-    // Match column name by pattern
+    // Match column content by pattern
     function findValue(row, pattern) {
       for (const [k, v] of Object.entries(row)) {
         if (pattern.test(k)) {
@@ -450,15 +449,14 @@
           throw new Error('Không có dữ liệu trong bảng.');
         }
 
-        // Determine real headers
+        // 1. Collect all header names across cols schema and row 0
         let colHeaders = (json.table.cols || []).map(c => (c && c.label ? c.label.trim() : ''));
         let startRow = 0;
 
-        // If gviz didn't return labels in cols, inspect row 0
-        const namedCount = colHeaders.filter(h => h.length > 0).length;
-        if (namedCount < 5 && json.table.rows.length > 0) {
-          const firstRowCells = json.table.rows[0].c || [];
-          const candidateLabels = firstRowCells.map(c => c && (c.f || c.v) ? String(c.f || c.v).trim() : '');
+        // Fallback inspect row 0 if schema labels are missing
+        if (json.table.rows.length > 0) {
+          const row0Cells = json.table.rows[0].c || [];
+          const candidateLabels = row0Cells.map(c => c && (c.f || c.v) ? String(c.f || c.v).trim() : '');
           if (candidateLabels.some(lbl => /WBSID|Thủ Nhãn|STT/i.test(lbl))) {
             colHeaders = candidateLabels;
             startRow = 1;
@@ -467,7 +465,7 @@
 
         colHeaders = colHeaders.map((h, i) => h || `COL_${i}`);
 
-        // Parse data rows
+        // 2. Parse all data rows
         allRows = [];
         for (let r = startRow; r < json.table.rows.length; r++) {
           const rowObj = {};
@@ -477,16 +475,18 @@
             const h = colHeaders[idx] || `COL_${idx}`;
             const val = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== null && cell.v !== undefined ? cell.v : '')) : '';
             rowObj[h] = val;
+            rowObj[`idx_${idx}`] = val; // Also save by index for columns M (12) to Y (24)
           });
 
-          // Check if this row has actual content (ignore blank rows)
-          const testName = findValue(rowObj, /Thủ Nhãn|C5|WBSID/i);
-          if (testName) {
+          // Retain valid rows
+          const checkContent = findValue(rowObj, /Thủ Nhãn|C5|WBSID/i) || rowObj['idx_0'] || rowObj['idx_1'];
+          if (cleanText(checkContent)) {
             allRows.push(rowObj);
           }
         }
 
-        discoverFilters(colHeaders);
+        // 3. Scan and collect ALL 13 STT filters (Columns M to Y / 12 to 24)
+        discoverAllFilters(colHeaders);
         buildDropdown();
         handleFilterSort();
 
@@ -499,17 +499,54 @@
       }
     }
 
-    // Discover STT-xxx columns (M to Y)
-    function discoverFilters(headersList) {
+    // Comprehensive detector to guarantee all columns M through Y are discovered
+    function discoverAllFilters(headersList) {
       filterOptions = [];
-      const seen = new Set();
+      const seenKeys = new Set();
 
-      headersList.forEach(h => {
-        if (/STT[-_ ]/i.test(h) && !/sort|helper/i.test(h) && !seen.has(h)) {
+      // Check all columns by index from 12 (M) to 24 (Y)
+      for (let i = 12; i <= 24; i++) {
+        const colLetter = String.fromCharCode(65 + i); // M, N, O, P, Q, R, S, T, U, V, W, X, Y
+        const headerName = headersList[i] || '';
+        const idxKey = `idx_${i}`;
+
+        // Prefer actual header name if meaningful, otherwise use column index
+        const key = (headerName && !headerName.startsWith('COL_')) ? headerName : idxKey;
+
+        // Count how many cards have values in this column
+        const validRows = allRows.filter(r => cleanText(r[key]) !== '' || cleanText(r[idxKey]) !== '');
+        
+        if (validRows.length > 0 && !seenKeys.has(key)) {
+          seenKeys.add(key);
+          
+          // Clean title for dropdown display
+          let displayLabel = headerName;
+          if (!displayLabel || displayLabel.startsWith('COL_')) {
+            displayLabel = `STT-${colLetter}`;
+          }
+          displayLabel = displayLabel.replace(/^(STT[-_ ]*)+/i, 'STT-');
+
+          filterOptions.push({
+            key: key,
+            idxKey: idxKey,
+            label: displayLabel,
+            count: validRows.length
+          });
+        }
+      }
+
+      // Also scan any other header explicitly named STT-
+      headersList.forEach((h, idx) => {
+        if (/^STT[-_ ]/i.test(h) && !seenKeys.has(h) && !/sort|helper/i.test(h)) {
           const count = allRows.filter(r => cleanText(r[h]) !== '').length;
           if (count > 0) {
-            seen.add(h);
-            filterOptions.push({ key: h, label: h, count: count });
+            seenKeys.add(h);
+            filterOptions.push({
+              key: h,
+              idxKey: `idx_${idx}`,
+              label: h,
+              count: count
+            });
           }
         }
       });
@@ -546,9 +583,17 @@
       if (selectedKey === '__ALL__') {
         list = [...allRows];
       } else {
+        // Find filter metadata
+        const optMeta = filterOptions.find(o => o.key === selectedKey);
+        const idxKey = optMeta ? optMeta.idxKey : selectedKey;
+
         list = allRows
-          .filter(r => cleanText(r[selectedKey]) !== '')
-          .sort((a, b) => naturalCompare(a[selectedKey], b[selectedKey]));
+          .filter(r => cleanText(r[selectedKey]) !== '' || cleanText(r[idxKey]) !== '')
+          .sort((a, b) => {
+            const valA = cleanText(a[selectedKey]) || cleanText(a[idxKey]);
+            const valB = cleanText(b[selectedKey]) || cleanText(b[idxKey]);
+            return naturalCompare(valA, valB);
+          });
       }
 
       if (searchVal) {
@@ -566,44 +611,44 @@
       }
 
       app.innerHTML = list.map(row => {
-        // 1. WBSID and A1 Sự for the full-width top pill
-        const wbsid = findValue(row, /^WBSID$/i) || findValue(row, /WBSID/i);
-        const a1Su = findValue(row, /^A1\s*Sự/i) || findValue(row, /A1/i);
+        // 1. Top Pill: WBSID - A1 Sự
+        const wbsid = findValue(row, /^WBSID$/i) || row['idx_0'] || '';
+        const a1Su = findValue(row, /^A1\s*Sự/i) || findValue(row, /Sự/i);
         
         let comboText = '';
-        if (wbsid && a1Su) comboText = `${wbsid} – ${a1Su}`;
-        else if (wbsid) comboText = wbsid;
-        else if (a1Su) comboText = a1Su;
+        if (cleanText(wbsid) && cleanText(a1Su)) comboText = `${cleanText(wbsid)} – ${cleanText(a1Su)}`;
+        else if (cleanText(wbsid)) comboText = cleanText(wbsid);
+        else if (cleanText(a1Su)) comboText = cleanText(a1Su);
 
-        // 2. A2 Lý (Under the pill)
+        // 2. A2 Lý (Under pill)
         const a2Ly = findValue(row, /^A2\s*Lý/i) || findValue(row, /A2/i);
 
         // 3. Title components
-        const c5Name = findValue(row, /C5.*Thủ Nhãn.*Tên/i) || findValue(row, /C5.*Tên/i) || findValue(row, /Thủ Nhãn/i);
-        const c1 = findValue(row, /C1.*Tên.*CTT/i) || findValue(row, /C1/i);
+        const c5Name = findValue(row, /C5.*Thủ Nhãn.*Tên/i) || findValue(row, /C5.*Tên/i) || findValue(row, /Thủ Nhãn.*Tên/i);
+        const c1 = findValue(row, /C1.*Tên.*CTT/i) || findValue(row, /C1.*Tên/i);
         const c4Siddham = findValue(row, /C4.*Siddham.*Unicode/i) || findValue(row, /Siddham/i);
 
-        // 4. English / Dharma name, CTT Dài, Giảng Giải
+        // 4. Dharma Name, CTT Dài, Giảng Giải
         const dharma = findValue(row, /Dharma Object/i) || findValue(row, /C5.*Object/i);
         const c2Dai = findValue(row, /C2.*Tên Dài/i) || findValue(row, /C2/i);
         const c3Giai = findValue(row, /C3.*Giảng Giải/i) || findValue(row, /C3/i);
 
         // 5. Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link)
         const imgLeft = getDriveDirectImageUrl(findValue(row, /C4.*CTT.*Link/i) || findValue(row, /CTT.*Link/i));
-        const imgRight = getDriveDirectImageUrl(findValue(row, /C6.*Pháp Bảo.*Link/i) || findValue(row, /Pháp Bảo.*Link/i));
+        const imgRight = getDriveDirectImageUrl(findValue(row, /C6.*Pháp Bảo.*Link/i) || findValue(row, /C6/i) || findValue(row, /Pháp Bảo.*Link/i));
 
-        // 6. Lesser emphasis elements (A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn)
-        const a3KhaiDan = findValue(row, /A3.*Khai Dẫn/i) || findValue(row, /A3/i);
-        const a5TrungDan = findValue(row, /A5.*Trung Dẫn/i) || findValue(row, /A5/i);
-        const a9KetDan = findValue(row, /A9.*Kết Dẫn/i) || findValue(row, /A9/i);
+        // 6. Lesser emphasis: A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn
+        const a3KhaiDan = findValue(row, /A3.*Khai Dẫn/i);
+        const a5TrungDan = findValue(row, /A5.*Trung Dẫn/i);
+        const a9KetDan = findValue(row, /A9.*Kết Dẫn/i);
 
-        // 7. High emphasis elements (A4 Hành, A4 Hành A/B, Audio, A6 Chú KD, A8 Lời KĐ)
-        const a4Hanh = findValue(row, /^A4\s*Hành$/i) || findValue(row, /A4.*Hành$/i);
+        // 7. High emphasis: A4 Hành, A4 Hành A/B, Audio, A6 Chú KD, A8 Lời KĐ
+        const a4Hanh = findValue(row, /^A4\s*Hành$/i);
         const a4HanhA = findValue(row, /A4.*Hành\s*A/i) || findValue(row, /Hành\s*A/i);
         const a4HanhB = findValue(row, /A4.*Hành\s*B/i) || findValue(row, /Hành\s*B/i);
         const d1Voice = findValue(row, /D1.*Voice/i) || findValue(row, /Van Voice/i) || findValue(row, /YouTube/i);
-        const a6ChuKD = findValue(row, /A6.*Chú Khởi Động/i) || findValue(row, /A6/i);
-        const a8LoiKD = findValue(row, /A8.*Lời Khẳng Định/i) || findValue(row, /A8/i);
+        const a6ChuKD = findValue(row, /A6.*Chú Khởi Động/i);
+        const a8LoiKD = findValue(row, /A8.*Lời Khẳng Định/i);
 
         return `
           <div class="card">
