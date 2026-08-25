@@ -138,42 +138,38 @@
       border-radius: 18px;
       border: 1px solid var(--card-border);
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-      padding: 16px 14px 20px 14px;
+      padding: 14px 14px 18px 14px;
       margin-bottom: 20px;
       position: relative;
     }
 
-    /* Top Row with Right-Aligned Pill */
-    .card-top-row {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .combo-pill {
-      font-size: 0.82rem;
+    /* Full-Width Centered Top Pill */
+    .full-width-pill {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: clamp(0.85rem, 3.5vw, 0.98rem);
       color: var(--text-gold);
-      background: rgba(255, 236, 179, 0.12);
-      border: 1px solid rgba(255, 236, 179, 0.28);
-      padding: 3px 10px;
-      border-radius: 12px;
+      background: rgba(255, 236, 179, 0.10);
+      border: 1px solid rgba(255, 236, 179, 0.24);
+      padding: 6px 12px;
+      border-radius: 20px;
       font-weight: 700;
       letter-spacing: 0.2px;
-      max-width: 85%;
-      text-align: right;
+      margin-bottom: 8px;
       word-break: break-word;
     }
 
-    /* Top: A2 Lý */
+    /* Top: A2 Lý (Smaller, subtle text directly under pill) */
     .top-ly {
       font-style: italic;
       color: #a5d6a7;
       text-align: center;
-      font-size: clamp(0.9rem, 3.4vw, 1.05rem);
-      line-height: 1.45;
-      margin: 2px 0 10px 0;
+      font-size: clamp(0.85rem, 3.2vw, 0.96rem);
+      line-height: 1.4;
+      margin: 4px 0 10px 0;
       padding: 0 6px;
+      opacity: 0.95;
     }
 
     /* Title: C5 Tên Thủ Nhãn – C1 Tên CTT + C4 Siddham */
@@ -208,7 +204,7 @@
       text-align: center;
       font-weight: 600;
       font-size: clamp(0.95rem, 3.5vw, 1.1rem);
-      margin: 4px 0 10px 0;
+      margin: 4px 0 8px 0;
       opacity: 0.9;
     }
 
@@ -217,9 +213,9 @@
       color: var(--text-gold);
       text-align: center;
       font-weight: 700;
-      font-size: clamp(1.05rem, 4vw, 1.25rem);
+      font-size: clamp(1.02rem, 3.8vw, 1.2rem);
       line-height: 1.35;
-      margin: 8px 0 4px 0;
+      margin: 6px 0 4px 0;
     }
 
     /* Giảng Giải CTT */
@@ -227,9 +223,9 @@
       color: var(--text-green);
       text-align: center;
       font-weight: 400;
-      font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+      font-size: clamp(0.9rem, 3.2vw, 1.02rem);
       line-height: 1.45;
-      margin: 6px 4px 14px 4px;
+      margin: 6px 4px 12px 4px;
     }
 
     /* Dual Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link) */
@@ -253,35 +249,30 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* ==========================================================
-       LESSER EMPHASIS STYLES (A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn)
-       ========================================================== */
+    /* Lesser Emphasis: A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn */
     .lesser-dan {
       color: var(--text-peach-soft);
       text-align: center;
       font-weight: 400;
       font-style: italic;
-      font-size: clamp(0.92rem, 3.4vw, 1.05rem);
+      font-size: clamp(0.92rem, 3.4vw, 1.04rem);
       line-height: 1.45;
       margin: 10px 6px;
       padding: 0 4px;
       opacity: 0.92;
     }
 
-    /* ==========================================================
-       HIGH EMPHASIS STYLES (A4 Hành, A4 Hành A/B, A6 Chú KD, A8 Lời KĐ)
-       ========================================================== */
-    /* A4 Hành */
+    /* High Emphasis: A4 Hành Header */
     .chu-header {
       color: var(--text-gold-bright);
       text-align: center;
       font-weight: 800;
-      font-size: clamp(1.15rem, 4.4vw, 1.4rem);
+      font-size: clamp(1.15rem, 4.4vw, 1.38rem);
       margin: 14px 0 8px 0;
       letter-spacing: 0.3px;
     }
 
-    /* A4 Hành A & B */
+    /* High Emphasis: A4 Hành A & B */
     .data-container {
       display: flex;
       justify-content: space-between;
@@ -331,7 +322,7 @@
       transform: scale(0.97);
     }
 
-    /* A6 Chú Khởi Động (High emphasis) */
+    /* High Emphasis: A6 Chú Khởi Động */
     .chu-KD-bold {
       color: var(--text-orange-bold);
       text-align: center;
@@ -339,14 +330,14 @@
       font-size: clamp(1.12rem, 4.3vw, 1.38rem);
       line-height: 1.35;
       margin: 14px 0 8px 0;
-      padding: 6px 8px;
+      padding: 8px 10px;
       background: rgba(255, 171, 145, 0.08);
       border-radius: 8px;
       border: 1px solid rgba(255, 171, 145, 0.2);
       word-break: break-word;
     }
 
-    /* A8 Lời Khẳng Định (High emphasis) */
+    /* High Emphasis: A8 Lời Khẳng Định */
     .KD-bold {
       color: var(--text-light-green);
       text-align: center;
@@ -354,7 +345,7 @@
       font-size: clamp(1.15rem, 4.4vw, 1.4rem);
       line-height: 1.35;
       margin: 10px 0 10px 0;
-      padding: 6px 8px;
+      padding: 8px 10px;
       background: rgba(200, 230, 201, 0.08);
       border-radius: 8px;
       border: 1px solid rgba(200, 230, 201, 0.22);
@@ -398,14 +389,13 @@
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(TAB_NAME)}`;
 
     let allRows = [];
-    let headers = [];
     let filterOptions = [];
 
-    // Google Drive direct image URL parser
+    // Helper: Convert Google Drive URLs/IDs to direct thumbnail images
     function getDriveDirectImageUrl(urlOrId) {
       if (!urlOrId) return '';
       const str = String(urlOrId).trim();
-      if (!str) return '';
+      if (!str || str.startsWith('#') || str.length < 5) return '';
 
       if (/^[a-zA-Z0-9_-]{25,}$/.test(str)) {
         return `https://drive.google.com/thumbnail?id=${str}&sz=w800`;
@@ -419,25 +409,36 @@
       if (idMatch && idMatch[1]) {
         return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w800`;
       }
-      return str;
+
+      if (str.startsWith('http://') || str.startsWith('https://')) {
+        return str;
+      }
+      return '';
     }
 
-    // Natural alphanumeric compare (e.g. E01 < E02 < E10)
     function naturalCompare(a, b) {
       return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
     }
 
-    // Lookup cell content safely
-    function getField(row, ...keys) {
-      for (const k of keys) {
-        if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== '') {
-          return String(row[k]).trim();
+    // Strict validator to avoid displaying raw numeric IDs or codes in text fields
+    function cleanText(val) {
+      if (val === undefined || val === null) return '';
+      const s = String(val).trim();
+      if (s === '' || s === '0' || s === 'null' || s === 'undefined') return '';
+      return s;
+    }
+
+    // Match column name by pattern
+    function findValue(row, pattern) {
+      for (const [k, v] of Object.entries(row)) {
+        if (pattern.test(k)) {
+          const cleaned = cleanText(v);
+          if (cleaned) return cleaned;
         }
       }
       return '';
     }
 
-    // 1. Fetch live sheet data
     async function initSheetData() {
       try {
         const res = await fetch(GVIZ_URL);
@@ -449,43 +450,43 @@
           throw new Error('Không có dữ liệu trong bảng.');
         }
 
-        // Determine column labels with fallback to row 0 if labels are blank
-        let colLabels = (json.table.cols || []).map(c => (c && c.label ? c.label.trim() : ''));
-        let startRowIdx = 0;
+        // Determine real headers
+        let colHeaders = (json.table.cols || []).map(c => (c && c.label ? c.label.trim() : ''));
+        let startRow = 0;
 
-        const hasMissingLabels = colLabels.filter(Boolean).length < 5;
-        if (hasMissingLabels && json.table.rows.length > 0) {
-          const firstRow = json.table.rows[0].c || [];
-          const candidateLabels = firstRow.map(cell => (cell && (cell.f || cell.v) ? String(cell.f || cell.v).trim() : ''));
-          
-          if (candidateLabels.some(l => /WBSID|STT/i.test(l))) {
-            colLabels = candidateLabels;
-            startRowIdx = 1;
+        // If gviz didn't return labels in cols, inspect row 0
+        const namedCount = colHeaders.filter(h => h.length > 0).length;
+        if (namedCount < 5 && json.table.rows.length > 0) {
+          const firstRowCells = json.table.rows[0].c || [];
+          const candidateLabels = firstRowCells.map(c => c && (c.f || c.v) ? String(c.f || c.v).trim() : '');
+          if (candidateLabels.some(lbl => /WBSID|Thủ Nhãn|STT/i.test(lbl))) {
+            colHeaders = candidateLabels;
+            startRow = 1;
           }
         }
 
-        headers = colLabels.map((lbl, idx) => lbl || `col_${idx}`);
+        colHeaders = colHeaders.map((h, i) => h || `COL_${i}`);
 
         // Parse data rows
         allRows = [];
-        for (let r = startRowIdx; r < json.table.rows.length; r++) {
+        for (let r = startRow; r < json.table.rows.length; r++) {
           const rowObj = {};
           const cells = json.table.rows[r].c || [];
+          
           cells.forEach((cell, idx) => {
-            const h = headers[idx] || `col_${idx}`;
+            const h = colHeaders[idx] || `COL_${idx}`;
             const val = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== null && cell.v !== undefined ? cell.v : '')) : '';
             rowObj[h] = val;
-            rowObj[`idx_${idx}`] = val;
           });
 
-          // Keep rows with content (exclude sort helper from causing false positives)
-          const hasContent = Object.values(rowObj).some(v => String(v).trim() !== '');
-          if (hasContent) {
+          // Check if this row has actual content (ignore blank rows)
+          const testName = findValue(rowObj, /Thủ Nhãn|C5|WBSID/i);
+          if (testName) {
             allRows.push(rowObj);
           }
         }
 
-        discoverFilters();
+        discoverFilters(colHeaders);
         buildDropdown();
         handleFilterSort();
 
@@ -493,46 +494,27 @@
         console.error(err);
         document.getElementById('statusBox').innerHTML = `
           <p style="color:#ef5350; font-weight:700;">Không thể tải dữ liệu từ Google Sheet</p>
-          <p style="font-size:0.85rem; margin-top:8px;">Vui lòng kiểm tra tab "${TAB_NAME}" và quyền chia sẻ của file.</p>
+          <p style="font-size:0.85rem; margin-top:8px;">Vui lòng kiểm tra quyền chia sẻ công khai của file.</p>
         `;
       }
     }
 
-    // 2. Discover STT-xxx filter columns (Columns M to Y / 12 to 24)
-    function discoverFilters() {
+    // Discover STT-xxx columns (M to Y)
+    function discoverFilters(headersList) {
       filterOptions = [];
-      const foundKeys = new Set();
+      const seen = new Set();
 
-      // Check named STT headers (ignoring generic helper columns)
-      headers.forEach((h, idx) => {
-        if (/STT[-_ ]/i.test(h) && !/sort|helper/i.test(h) && !foundKeys.has(h)) {
-          const count = allRows.filter(r => String(r[h] || '').trim() !== '').length;
+      headersList.forEach(h => {
+        if (/STT[-_ ]/i.test(h) && !/sort|helper/i.test(h) && !seen.has(h)) {
+          const count = allRows.filter(r => cleanText(r[h]) !== '').length;
           if (count > 0) {
-            foundKeys.add(h);
+            seen.add(h);
             filterOptions.push({ key: h, label: h, count: count });
           }
         }
       });
-
-      // Ensure all columns M to Y (indices 12 to 24) are scanned
-      for (let i = 12; i <= 24; i++) {
-        const headerName = headers[i];
-        const idxKey = `idx_${i}`;
-        const keyToUse = (headerName && !headerName.startsWith('col_')) ? headerName : idxKey;
-
-        if (!foundKeys.has(keyToUse) && !/sort|helper/i.test(keyToUse)) {
-          const count = allRows.filter(r => String(r[keyToUse] || '').trim() !== '').length;
-          if (count > 0) {
-            foundKeys.add(keyToUse);
-            const colLetter = String.fromCharCode(65 + i);
-            const label = headerName && !headerName.startsWith('col_') ? headerName : `STT-${colLetter}`;
-            filterOptions.push({ key: keyToUse, label: label, count: count });
-          }
-        }
-      }
     }
 
-    // 3. Populate dropdown
     function buildDropdown() {
       const select = document.getElementById('sttSelect');
       select.innerHTML = '';
@@ -542,11 +524,11 @@
       allOpt.textContent = `📋 Xem tất cả (${allRows.length} thẻ)`;
       select.appendChild(allOpt);
 
-      filterOptions.forEach(optData => {
-        const opt = document.createElement('option');
-        opt.value = optData.key;
-        opt.textContent = `🎯 ${optData.label} (${optData.count} thẻ)`;
-        select.appendChild(opt);
+      filterOptions.forEach(opt => {
+        const el = document.createElement('option');
+        el.value = opt.key;
+        el.textContent = `🎯 ${opt.label} (${opt.count} thẻ)`;
+        select.appendChild(el);
       });
 
       if (filterOptions.length > 0) {
@@ -554,7 +536,6 @@
       }
     }
 
-    // 4. Filter, Sort, and Render
     function handleFilterSort() {
       const selectedKey = document.getElementById('sttSelect').value || '__ALL__';
       const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -566,10 +547,7 @@
         list = [...allRows];
       } else {
         list = allRows
-          .filter(r => {
-            const v = r[selectedKey];
-            return v !== undefined && v !== null && String(v).trim() !== '';
-          })
+          .filter(r => cleanText(r[selectedKey]) !== '')
           .sort((a, b) => naturalCompare(a[selectedKey], b[selectedKey]));
       }
 
@@ -588,72 +566,74 @@
       }
 
       app.innerHTML = list.map(row => {
-        const wbsid = getField(row, 'WBSID', 'Mã WBSID', 'Title (WBSID)', 'idx_0');
-        const a1Su = getField(row, 'A1 Sự', 'Sự', 'A1');
+        // 1. WBSID and A1 Sự for the full-width top pill
+        const wbsid = findValue(row, /^WBSID$/i) || findValue(row, /WBSID/i);
+        const a1Su = findValue(row, /^A1\s*Sự/i) || findValue(row, /A1/i);
         
-        // Build Top Right Pill: "WBSID – A1 Sự"
-        let comboPill = '';
-        if (wbsid && a1Su) {
-          comboPill = `${wbsid} – ${a1Su}`;
-        } else if (wbsid) {
-          comboPill = wbsid;
-        } else if (a1Su) {
-          comboPill = a1Su;
-        }
+        let comboText = '';
+        if (wbsid && a1Su) comboText = `${wbsid} – ${a1Su}`;
+        else if (wbsid) comboText = wbsid;
+        else if (a1Su) comboText = a1Su;
 
-        const a2Ly = getField(row, 'A2 Lý', 'Lý', 'idx_6');
-        const c5Name = getField(row, 'C5 Thủ Nhãn-Tên', 'C5 Tên Thủ Nhãn', 'C5 Thủ Nhãn', 'C5', 'idx_1');
-        const c1 = getField(row, 'C1 Tên CTT', 'C1 CTT', 'C1', 'idx_2');
-        const c4 = getField(row, 'C4 Siddham Unicode', 'C4 Siddham', 'C4', 'idx_5');
-        const dharma = getField(row, 'C5 Dharma Object Name', 'Dharma Object Name');
-        const c2 = getField(row, 'C2 Tên Dài CTT', 'C2 Dài CTT', 'C2', 'idx_3');
-        const c3 = getField(row, 'C3 Giảng Giải CTT', 'C3 Giảng Giải', 'C3', 'idx_4');
+        // 2. A2 Lý (Under the pill)
+        const a2Ly = findValue(row, /^A2\s*Lý/i) || findValue(row, /A2/i);
 
-        // Left Image: C4 CTT Link | Right Image: C6 Pháp Bảo Link
-        const imgLeft = getDriveDirectImageUrl(getField(row, 'C4 CTT Link', 'CTT Link', 'CTT-Link'));
-        const imgRight = getDriveDirectImageUrl(getField(row, 'C6 Pháp Bảo Link', 'Pháp Bảo Link', 'C5 Pháp Bảo Link', 'Phap Bao Link'));
+        // 3. Title components
+        const c5Name = findValue(row, /C5.*Thủ Nhãn.*Tên/i) || findValue(row, /C5.*Tên/i) || findValue(row, /Thủ Nhãn/i);
+        const c1 = findValue(row, /C1.*Tên.*CTT/i) || findValue(row, /C1/i);
+        const c4Siddham = findValue(row, /C4.*Siddham.*Unicode/i) || findValue(row, /Siddham/i);
 
-        // Lesser emphasis: A3, A5, A9
-        const a3KhaiDan = getField(row, 'A3 Khai Dẫn', 'Khai Dẫn', 'idx_7');
-        const a5TrungDan = getField(row, 'A5 Trung Dẫn', 'Trung Dẫn');
-        const a9KetDan = getField(row, 'A9 Kết Dẫn', 'Kết Dẫn');
+        // 4. English / Dharma name, CTT Dài, Giảng Giải
+        const dharma = findValue(row, /Dharma Object/i) || findValue(row, /C5.*Object/i);
+        const c2Dai = findValue(row, /C2.*Tên Dài/i) || findValue(row, /C2/i);
+        const c3Giai = findValue(row, /C3.*Giảng Giải/i) || findValue(row, /C3/i);
 
-        // High emphasis: A4, A4 Hành A/B, A6, A8
-        const a4Hanh = getField(row, 'A4 Hành', 'Hành', 'idx_8');
-        const a4HanhA = getField(row, 'A4 Hành A', 'Hành A', 'idx_9');
-        const a4HanhB = getField(row, 'A4 Hành B', 'Hành B', 'idx_10');
-        const d1Voice = getField(row, 'D1 Van Voice', 'D1 Voice', 'D1', 'idx_11');
-        const a6ChuKD = getField(row, 'A6 Chú Khởi Động', 'Chú Khởi Động');
-        const a8LoiKD = getField(row, 'A8 Lời Khẳng Định', 'Lời Khẳng Định');
+        // 5. Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link)
+        const imgLeft = getDriveDirectImageUrl(findValue(row, /C4.*CTT.*Link/i) || findValue(row, /CTT.*Link/i));
+        const imgRight = getDriveDirectImageUrl(findValue(row, /C6.*Pháp Bảo.*Link/i) || findValue(row, /Pháp Bảo.*Link/i));
+
+        // 6. Lesser emphasis elements (A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn)
+        const a3KhaiDan = findValue(row, /A3.*Khai Dẫn/i) || findValue(row, /A3/i);
+        const a5TrungDan = findValue(row, /A5.*Trung Dẫn/i) || findValue(row, /A5/i);
+        const a9KetDan = findValue(row, /A9.*Kết Dẫn/i) || findValue(row, /A9/i);
+
+        // 7. High emphasis elements (A4 Hành, A4 Hành A/B, Audio, A6 Chú KD, A8 Lời KĐ)
+        const a4Hanh = findValue(row, /^A4\s*Hành$/i) || findValue(row, /A4.*Hành$/i);
+        const a4HanhA = findValue(row, /A4.*Hành\s*A/i) || findValue(row, /Hành\s*A/i);
+        const a4HanhB = findValue(row, /A4.*Hành\s*B/i) || findValue(row, /Hành\s*B/i);
+        const d1Voice = findValue(row, /D1.*Voice/i) || findValue(row, /Van Voice/i) || findValue(row, /YouTube/i);
+        const a6ChuKD = findValue(row, /A6.*Chú Khởi Động/i) || findValue(row, /A6/i);
+        const a8LoiKD = findValue(row, /A8.*Lời Khẳng Định/i) || findValue(row, /A8/i);
 
         return `
           <div class="card">
             
-            <!-- Top Right Pill: Combo WBSID - A1 Sự -->
-            <div class="card-top-row">
-              ${comboPill ? `<span class="combo-pill">${comboPill}</span>` : `<span></span>`}
-            </div>
+            <!-- Full Width Centered Top Pill: WBSID - A1 Sự -->
+            ${comboText ? `<div class="full-width-pill">${comboText}</div>` : ''}
 
-            <!-- Top: A2 Lý -->
+            <!-- Smaller text A2 Lý directly under pill -->
             ${a2Ly ? `<p class="top-ly">${a2Ly}</p>` : ''}
 
-            <!-- Title: Thủ Nhãn + CTT + Siddham -->
-            <p class="card-label">
-              <span class="tên">${c5Name}</span>
-              ${c1 ? `<span class="separator">–</span><span class="CTT">${c1}</span>` : ''}
-              ${c4 ? `<span class="siddham">${c4}</span>` : ''}
-            </p>
+            <!-- Main Heading: Thủ Nhãn + CTT + Siddham -->
+            ${(c5Name || c1 || c4Siddham) ? `
+              <p class="card-label">
+                ${c5Name ? `<span class="tên">${c5Name}</span>` : ''}
+                ${(c5Name && c1) ? `<span class="separator">–</span>` : ''}
+                ${c1 ? `<span class="CTT">${c1}</span>` : ''}
+                ${c4Siddham ? `<span class="siddham">${c4Siddham}</span>` : ''}
+              </p>
+            ` : ''}
 
             <!-- Dharma Object Name -->
             ${dharma ? `<p class="name">${dharma}</p>` : ''}
 
             <!-- CTT Dài -->
-            ${c2 ? `<p class="CTT-dai">${c2}</p>` : ''}
+            ${c2Dai ? `<p class="CTT-dai">${c2Dai}</p>` : ''}
 
             <!-- Giảng Giải CTT -->
-            ${c3 ? `<p class="chu-thich">${c3}</p>` : ''}
+            ${c3Giai ? `<p class="chu-thich">${c3Giai}</p>` : ''}
 
-            <!-- Dual Images: Left (C4 CTT Link) & Right (C6 Pháp Bảo Link) -->
+            <!-- Dual Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link) -->
             ${(imgLeft || imgRight) ? `
               <div class="image-container">
                 ${imgLeft ? `<img src="${imgLeft}" class="card-img" alt="CTT" loading="lazy" onerror="this.style.display='none'"/>` : ''}
@@ -664,7 +644,7 @@
             <!-- A3 Khai Dẫn (Lesser emphasis) -->
             ${a3KhaiDan ? `<p class="lesser-dan">${a3KhaiDan}</p>` : ''}
 
-            <!-- A4 Hành (High emphasis) -->
+            <!-- A4 Hành Header (High emphasis) -->
             ${a4Hanh ? `<h5 class="chu-header">${a4Hanh}</h5>` : ''}
 
             <!-- A4 Hành A & B (High emphasis) -->
@@ -675,7 +655,7 @@
               </div>
             ` : ''}
 
-            <!-- YouTube Audio Button -->
+            <!-- YouTube Voice Button -->
             ${d1Voice ? `
               <div class="button-container">
                 <a href="${d1Voice}" target="_blank" rel="noopener noreferrer" class="youtube-btn">
