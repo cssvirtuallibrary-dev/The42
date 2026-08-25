@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Hoa Nghiêm Thủ Nhãn</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Siddham&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #0d0e12;
+      --card-bg: #181922;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-purple: #ce93d8;
+      --text-gold: #ffecb3;
+      --text-green: #81c784;
+      --text-peach: #ffccbc;
+      --text-light-green: #c8e6c9;
+      --yt-red: #e50914;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: #eceff1;
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding-bottom: 40px;
+    }
+
+    /* Sticky Mobile Header / Filter Bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 14, 18, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .app-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-gold);
+    }
+
+    .count-badge {
+      font-size: 0.8rem;
+      background: rgba(255, 236, 179, 0.15);
+      color: var(--text-gold);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .filter-wrapper select {
+      width: 100%;
+      background: #232532;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Main Container */
+    #app {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 12px 10px;
+    }
+
+    /* Status Messages */
+    .status-box {
+      text-align: center;
+      padding: 50px 20px;
+      color: #90a4ae;
+      font-size: 1rem;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(206, 147, 216, 0.2);
+      border-top-color: var(--text-purple);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Card Item */
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+      padding: 18px 14px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    /* Order Badge */
+    .order-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(255, 236, 179, 0.12);
+      color: var(--text-gold);
+      border: 1px solid rgba(255, 236, 179, 0.25);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    /* Card Title (Thủ Nhãn + CTT + Siddham) */
+    .card-label {
+      color: var(--text-purple);
+      text-align: center;
+      font-size: clamp(1.3rem, 5vw, 1.7rem);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .siddham {
+      font-family: "Noto Sans Siddham", serif;
+      font-weight: 400;
+      font-size: 1.15em;
+      margin-left: 6px;
+      color: #e1bee7;
+    }
+
+    /* Dharma Object Name */
+    .name {
+      color: #eceff1;
+      text-align: center;
+      font-weight: 600;
+      font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+      margin: 4px 0 10px 0;
+      opacity: 0.9;
+    }
+
+    /* CTT Dài */
+    .CTT-dai {
+      color: var(--text-gold);
+      text-align: center;
+      font-weight: 700;
+      font-size: clamp(1.05rem, 4vw, 1.25rem);
+      line-height: 1.35;
+      margin: 10px 0 6px 0;
+    }
+
+    /* Giảng Giải / Lý */
+    .chu-thich {
+      color: var(--text-green);
+      text-align: center;
+      font-weight: 400;
+      font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+      line-height: 1.45;
+      margin: 8px 4px;
+    }
+
+    .chu-thich.ly {
+      font-style: italic;
+      color: #a5d6a7;
+      margin-top: 10px;
+    }
+
+    /* Image Container */
+    .image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0;
+      width: 100%;
+    }
+
+    .card-img {
+      max-width: 48%;
+      height: auto;
+      max-height: 160px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Khai Dẫn */
+    .chi-dan {
+      color: var(--text-peach);
+      text-align: center;
+      font-weight: 500;
+      font-size: clamp(1.05rem, 4vw, 1.3rem);
+      line-height: 1.4;
+      margin: 12px 4px;
+    }
+
+    /* Hành Header */
+    .chu-header {
+      color: #ffe082;
+      text-align: center;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 4.2vw, 1.35rem);
+      margin: 12px 0 6px 0;
+    }
+
+    /* Hành A & Hành B */
+    .data-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 6px 0 14px 0;
+    }
+
+    .chu-col {
+      flex: 1;
+      color: var(--text-gold);
+      text-align: center;
+      font-weight: 600;
+      font-size: clamp(0.95rem, 3.6vw, 1.15rem);
+      line-height: 1.3;
+      background: rgba(255, 236, 179, 0.05);
+      padding: 10px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 236, 179, 0.12);
+      word-break: break-word;
+    }
+
+    /* YouTube Button */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin: 16px 0 12px 0;
+    }
+
+    .youtube-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--yt-red);
+      color: #ffffff !important;
+      padding: 10px 20px;
+      font-size: clamp(0.9rem, 3.5vw, 1.05rem);
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 24px;
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.35);
+      min-height: 44px;
+    }
+
+    .youtube-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Chú Khởi Động & Lời Khẳng Định */
+    .chu-KD {
+      color: var(--text-peach);
+      text-align: center;
+      font-weight: 600;
+      font-size: clamp(1.05rem, 4vw, 1.3rem);
+      line-height: 1.35;
+      margin: 12px 0 6px 0;
+    }
+
+    .KD {
+      color: var(--text-light-green);
+      text-align: center;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 4.2vw, 1.35rem);
+      line-height: 1.35;
+      margin: 10px 0 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header with dynamic sequence dropdown -->
+  <header>
+    <div class="header-top">
+      <span class="app-title">Hoa Nghiêm Thủ Nhãn</span>
+      <span class="count-badge" id="cardCount">0 thẻ</span>
+    </div>
+    <div class="filter-wrapper">
+      <select id="sequenceSelect" onchange="handleSequenceChange()">
+        <option value="">Đang tải danh sách thứ tự...</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Card List Container -->
+  <main id="app">
+    <div class="status-box" id="statusMessage">
+      <div class="spinner"></div>
+      Đang tải dữ liệu từ Google Drive...
+    </div>
+  </main>
+
+  <script>
+    // Configuration for your Google Spreadsheet
+    const SHEET_ID = '1Gvl7SNXhVSrKBJiPgt78T2opWckb5OO59S-q_4S6Y7w';
+    const SHEET_TAB_NAME = 'WBSID';
+    
+    // Google Visualization Query URL (Fetches live data as JSONP)
+    const GV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB_NAME)}`;
+
+    let rawRows = [];
+    let headers = [];
+    let sequenceColumns = []; // All columns matching STT-*
+
+    // 1. Fetch live Google Sheet Data
+    async function loadSheetData() {
+      try {
+        const response = await fetch(GV_URL);
+        const text = await response.text();
+        
+        // Strip Google Visualization wrapper function: google.visualization.Query.setResponse(...)
+        const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+        const data = JSON.parse(jsonString);
+
+        if (!data || !data.table) {
+          throw new Error("Không thể đọc dữ liệu từ bảng.");
+        }
+
+        // Extract column labels
+        headers = data.table.cols.map(c => (c && c.label ? c.label.trim() : ''));
+        
+        // Transform rows to plain objects
+        rawRows = data.table.rows.map(row => {
+          const item = {};
+          row.c.forEach((cell, idx) => {
+            const headerName = headers[idx] || `col_${idx}`;
+            // cell.v gives raw value, cell.f gives formatted text
+            item[headerName] = cell ? (cell.v !== null && cell.v !== undefined ? cell.v : '') : '';
+          });
+          return item;
+        });
+
+        // Find all STT- columns (M to Y)
+        sequenceColumns = headers.filter(h => h.toUpperCase().startsWith('STT-') || h.toUpperCase().startsWith('STT '));
+
+        populateFilterDropdown();
+        renderCards();
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('statusMessage').innerHTML = `
+          <p style="color:#ef5350; font-weight:600;">Không thể tải dữ liệu</p>
+          <p style="font-size:0.85rem; margin-top:8px;">Vui lòng kiểm tra quyền chia sẻ công khai của Google Sheet.</p>
+        `;
+      }
+    }
+
+    // 2. Build the STT selector dropdown
+    function populateFilterDropdown() {
+      const select = document.getElementById('sequenceSelect');
+      select.innerHTML = '';
+
+      // Default option (Show all)
+      const allOpt = document.createElement('option');
+      allOpt.value = '__ALL__';
+      allOpt.textContent = '📋 Tất cả Thủ Nhãn (Thứ tự mặc định)';
+      select.appendChild(allOpt);
+
+      // Add each STT- column
+      sequenceColumns.forEach(sttCol => {
+        const opt = document.createElement('option');
+        opt.value = sttCol;
+        opt.textContent = `🎯 Thứ tự: ${sttCol}`;
+        select.appendChild(opt);
+      });
+
+      // Auto-select first STT if available
+      if (sequenceColumns.length > 0) {
+        select.value = sequenceColumns[0];
+      }
+    }
+
+    // 3. Render Card visualization
+    function renderCards() {
+      const select = document.getElementById('sequenceSelect');
+      const selectedKey = select.value || '__ALL__';
+      const app = document.getElementById('app');
+
+      let filtered = [];
+
+      if (selectedKey === '__ALL__') {
+        filtered = [...rawRows];
+      } else {
+        // Filter rows that have a number/order in the chosen STT column
+        filtered = rawRows
+          .filter(r => {
+            const val = r[selectedKey];
+            return val !== '' && val !== null && val !== undefined && !isNaN(Number(val)) && Number(val) > 0;
+          })
+          .sort((a, b) => Number(a[selectedKey]) - Number(b[selectedKey]));
+      }
+
+      document.getElementById('cardCount').textContent = `${filtered.length} thẻ`;
+
+      if (filtered.length === 0) {
+        app.innerHTML = `<div class="status-box">Không có dữ liệu cho bộ lọc này.</div>`;
+        return;
+      }
+
+      // Helper function to safely get column text
+      const getVal = (row, ...aliases) => {
+        for (const key of aliases) {
+          if (row[key] !== undefined && row[key] !== '') return row[key];
+        }
+        return '';
+      };
+
+      // Helper for Base64 or standard image URLs
+      const formatImg = (val) => {
+        if (!val) return '';
+        const trimmed = String(val).trim();
+        if (trimmed.startsWith('data:image') || trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+          return trimmed;
+        }
+        // If raw base64 string without header:
+        return `data:image/png;base64,${trimmed}`;
+      };
+
+      app.innerHTML = filtered.map(row => {
+        const orderVal = selectedKey !== '__ALL__' ? row[selectedKey] : '';
+        const c5Name = getVal(row, 'C5 Thủ Nhãn-Tên', 'C5 Tên Thủ Nhãn', 'C5 Thủ Nhãn');
+        const c1 = getVal(row, 'C1 Tên CTT', 'C1 CTT', 'C1 Tên');
+        const c4 = getVal(row, 'C4 Siddham Unicode', 'C4 Siddham', 'C4');
+        const dharma = getVal(row, 'C5 Dharma Object Name', 'Dharma Object Name');
+        const c2 = getVal(row, 'C2 Tên Dài CTT', 'C2 Dài CTT', 'C2');
+        const c3 = getVal(row, 'C3 Giảng Giải CTT', 'C3 Giảng Giải', 'C3');
+        const a2 = getVal(row, 'A2 Lý', 'A2');
+        const a3 = getVal(row, 'A3 Khai Dẫn', 'A3');
+        const a4 = getVal(row, 'A4 Hành', 'A4');
+        const a4A = getVal(row, 'A4 Hành A', 'Hành A');
+        const a4B = getVal(row, 'A4 Hành B', 'Hành B');
+        const d1Voice = getVal(row, 'D1 Van Voice', 'D1 Voice', 'D1');
+        const a6 = getVal(row, 'A6 Chú Khởi Động', 'A6');
+        const a8 = getVal(row, 'A8 Lời Khẳng Định', 'A8');
+
+        const imgCTT = formatImg(getVal(row, 'CTT-B64', 'CTT-Image'));
+        const imgPhapBao = formatImg(getVal(row, 'Pháp Bảo-B64', 'Pháp Bảo-Image'));
+
+        return `
+          <div class="card">
+            ${orderVal ? `<div class="order-badge">#${orderVal}</div>` : ''}
+
+            <!-- Label -->
+            <p class="card-label">
+              <span class="tên">${c5Name}</span>
+              ${c1 ? `<span class="separator"> – </span><span class="CTT">${c1}</span>` : ''}
+              ${c4 ? `<span class="siddham">${c4}</span>` : ''}
+            </p>
+
+            <!-- Dharma Name -->
+            ${dharma ? `<p class="name">${dharma}</p>` : ''}
+
+            <!-- CTT Dài -->
+            ${c2 ? `<p class="CTT-dai">${c2}</p>` : ''}
+
+            <!-- CTT Giảng Giải -->
+            ${c3 ? `<p class="chu-thich">${c3}</p>` : ''}
+
+            <!-- Images -->
+            ${(imgCTT || imgPhapBao) ? `
+              <div class="image-container">
+                ${imgCTT ? `<img src="${imgCTT}" class="card-img" alt="CTT" loading="lazy" />` : ''}
+                ${imgPhapBao ? `<img src="${imgPhapBao}" class="card-img" alt="Pháp Bảo" loading="lazy" />` : ''}
+              </div>
+            ` : ''}
+
+            <!-- Lý -->
+            ${a2 ? `<p class="chu-thich ly">${a2}</p>` : ''}
+
+            <!-- Khai Dẫn -->
+            ${a3 ? `<p class="chi-dan">${a3}</p>` : ''}
+
+            <!-- Hành -->
+            ${a4 ? `<h5 class="chu-header">${a4}</h5>` : ''}
+
+            <!-- Hành A & B -->
+            ${(a4A || a4B) ? `
+              <div class="data-container">
+                ${a4A ? `<div class="chu-col">${a4A}</div>` : ''}
+                ${a4B ? `<div class="chu-col">${a4B}</div>` : ''}
+              </div>
+            ` : ''}
+
+            <!-- YouTube Voice Link -->
+            ${d1Voice ? `
+              <div class="button-container">
+                <a href="${d1Voice}" target="_blank" rel="noopener noreferrer" class="youtube-btn">
+                  <span>▶</span> Nghe trên YouTube
+                </a>
+              </div>
+            ` : ''}
+
+            <!-- Chú Khởi Động & Khẳng Định -->
+            ${a6 ? `<p class="chu-KD">${a6}</p>` : ''}
+            ${a8 ? `<p class="KD">${a8}</p>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleSequenceChange() {
+      renderCards();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', loadSheetData);
+  </script>
+</body>
+</html>
