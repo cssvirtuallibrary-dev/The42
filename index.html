@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hoa Nghiêm Thủ Nhãn</title>
 
   <!-- Google Fonts: Siddham & Vietnamese support -->
@@ -12,8 +12,8 @@
 
   <style>
     :root {
-      --bg-color: #0c0d12;
-      --card-bg: #161822;
+      --bg-color: #0b0c10;
+      --card-bg: #151722;
       --card-border: rgba(255, 255, 255, 0.08);
       --text-purple: #ce93d8;
       --text-gold: #ffecb3;
@@ -23,7 +23,7 @@
       --text-peach-soft: #ffccbc;
       --text-orange-bold: #ffab91;
       --text-muted: #90a4ae;
-      --yt-red: #e50914;
+      --player-bg: #1f2230;
     }
 
     * {
@@ -37,90 +37,145 @@
       background-color: var(--bg-color);
       color: #eceff1;
       font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      padding-bottom: 50px;
+      padding-bottom: 60px;
     }
 
-    /* Sticky Mobile Control Header */
+    /* ==========================================================
+       STICKY RESPONSIVE HEADER
+       ========================================================== */
     header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(12, 13, 18, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 10px 14px;
+      background: rgba(11, 12, 16, 0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 12px 18px;
       border-bottom: 1px solid var(--card-border);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
 
-    .header-bar {
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
     }
 
     .app-title {
-      font-size: 1.05rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: var(--text-gold);
-      letter-spacing: 0.3px;
+      letter-spacing: 0.4px;
     }
 
     .counter-pill {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       background: rgba(255, 236, 179, 0.15);
       color: var(--text-gold);
-      border: 1px solid rgba(255, 236, 179, 0.25);
-      padding: 3px 9px;
-      border-radius: 12px;
+      border: 1px solid rgba(255, 236, 179, 0.28);
+      padding: 4px 12px;
+      border-radius: 14px;
       font-weight: 700;
       white-space: nowrap;
     }
 
     .controls-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    /* On Landscape & Desktop, split controls horizontally */
+    @media (min-width: 680px) {
+      .header-container {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .controls-grid {
+        grid-template-columns: 1.2fr 1fr;
+        flex: 1;
+        max-width: 750px;
+        margin-left: 20px;
+      }
     }
 
     .custom-select, .search-box {
       width: 100%;
-      background: #1f2230;
+      background: #1e202c;
       color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 0.92rem;
+      padding: 10px 14px;
+      font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .custom-select:focus, .search-box:focus {
       border-color: var(--text-gold);
+      box-shadow: 0 0 0 2px rgba(255, 236, 179, 0.2);
     }
 
     .search-box::placeholder {
       color: #78909c;
     }
 
-    /* Content Area */
+    /* ==========================================================
+       RESPONSIVE CARD GRID LAYOUT
+       ========================================================== */
     main {
-      max-width: 520px;
+      width: 100%;
+      max-width: 1440px;
       margin: 0 auto;
-      padding: 12px 10px;
+      padding: 16px 12px;
+    }
+
+    #cardsGrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* Landscape phones & small tablets: 2 columns */
+    @media (min-width: 680px) {
+      #cardsGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+      }
+      main {
+        padding: 20px 16px;
+      }
+    }
+
+    /* Desktop & large screens: 3 columns */
+    @media (min-width: 1120px) {
+      #cardsGrid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
     }
 
     .status-box {
+      grid-column: 1 / -1;
       text-align: center;
-      padding: 60px 16px;
+      padding: 70px 16px;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
 
     .spinner {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border: 3px solid rgba(206, 147, 216, 0.2);
       border-top-color: var(--text-purple);
       border-radius: 50%;
@@ -132,15 +187,27 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Card Item */
+    /* ==========================================================
+       CARD STYLING
+       ========================================================== */
     .card {
       background: var(--card-bg);
       border-radius: 18px;
       border: 1px solid var(--card-border);
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-      padding: 14px 14px 18px 14px;
-      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      padding: 16px 16px 20px 16px;
+      display: flex;
+      flex-direction: column;
       position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    @media (hover: hover) {
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+        border-color: rgba(255, 236, 179, 0.25);
+      }
     }
 
     /* Full-Width Centered Top Pill */
@@ -148,14 +215,14 @@
       display: block;
       width: 100%;
       text-align: center;
-      font-size: clamp(0.85rem, 3.5vw, 0.98rem);
+      font-size: clamp(0.85rem, 2vw, 0.98rem);
       color: var(--text-gold);
       background: rgba(255, 236, 179, 0.10);
-      border: 1px solid rgba(255, 236, 179, 0.24);
-      padding: 6px 12px;
-      border-radius: 20px;
+      border: 1px solid rgba(255, 236, 179, 0.26);
+      padding: 7px 14px;
+      border-radius: 24px;
       font-weight: 700;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.3px;
       margin-bottom: 8px;
       word-break: break-word;
     }
@@ -165,8 +232,8 @@
       font-style: italic;
       color: #a5d6a7;
       text-align: center;
-      font-size: clamp(0.85rem, 3.2vw, 0.96rem);
-      line-height: 1.4;
+      font-size: clamp(0.84rem, 1.8vw, 0.94rem);
+      line-height: 1.45;
       margin: 4px 0 10px 0;
       padding: 0 6px;
       opacity: 0.95;
@@ -176,7 +243,7 @@
     .card-label {
       color: var(--text-purple);
       text-align: center;
-      font-size: clamp(1.3rem, 5vw, 1.7rem);
+      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
       font-weight: 700;
       line-height: 1.3;
       margin: 4px 0 4px 0;
@@ -203,7 +270,7 @@
       color: #eceff1;
       text-align: center;
       font-weight: 600;
-      font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+      font-size: clamp(0.92rem, 2vw, 1.05rem);
       margin: 4px 0 8px 0;
       opacity: 0.9;
     }
@@ -213,7 +280,7 @@
       color: var(--text-gold);
       text-align: center;
       font-weight: 700;
-      font-size: clamp(1.02rem, 3.8vw, 1.2rem);
+      font-size: clamp(1rem, 2.2vw, 1.18rem);
       line-height: 1.35;
       margin: 6px 0 4px 0;
     }
@@ -223,12 +290,12 @@
       color: var(--text-green);
       text-align: center;
       font-weight: 400;
-      font-size: clamp(0.9rem, 3.2vw, 1.02rem);
+      font-size: clamp(0.88rem, 1.8vw, 1rem);
       line-height: 1.45;
       margin: 6px 4px 12px 4px;
     }
 
-    /* Dual Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link) */
+    /* Responsive Dual Images */
     .image-container {
       display: flex;
       justify-content: center;
@@ -241,11 +308,11 @@
     .card-img {
       max-width: 48%;
       height: auto;
-      max-height: 170px;
+      max-height: 180px;
       object-fit: contain;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.03);
-      padding: 4px;
+      padding: 5px;
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
@@ -255,9 +322,9 @@
       text-align: center;
       font-weight: 400;
       font-style: italic;
-      font-size: clamp(0.92rem, 3.4vw, 1.04rem);
+      font-size: clamp(0.88rem, 1.8vw, 1.02rem);
       line-height: 1.45;
-      margin: 10px 6px;
+      margin: 10px 4px;
       padding: 0 4px;
       opacity: 0.92;
     }
@@ -267,7 +334,7 @@
       color: var(--text-gold-bright);
       text-align: center;
       font-weight: 800;
-      font-size: clamp(1.15rem, 4.4vw, 1.38rem);
+      font-size: clamp(1.1rem, 2.4vw, 1.35rem);
       margin: 14px 0 8px 0;
       letter-spacing: 0.3px;
     }
@@ -285,41 +352,33 @@
       color: #fff3d0;
       text-align: center;
       font-weight: 700;
-      font-size: clamp(0.95rem, 3.6vw, 1.15rem);
+      font-size: clamp(0.92rem, 2vw, 1.1rem);
       line-height: 1.35;
       background: rgba(255, 236, 179, 0.08);
-      padding: 12px 10px;
+      padding: 10px 8px;
       border-radius: 10px;
       border: 1.5px solid rgba(255, 236, 179, 0.22);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       word-break: break-word;
     }
 
-    /* YouTube Button */
-    .button-container {
+    /* ==========================================================
+       AUDIO PLAYER STYLING
+       ========================================================== */
+    .audio-wrapper {
+      margin: 14px 0 12px 0;
       display: flex;
-      justify-content: center;
-      margin: 16px 0 14px 0;
-    }
-
-    .youtube-btn {
-      display: inline-flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background-color: var(--yt-red);
-      color: #ffffff !important;
-      padding: 10px 22px;
-      font-size: clamp(0.9rem, 3.5vw, 1.05rem);
-      font-weight: 700;
-      text-decoration: none;
-      border-radius: 24px;
-      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.35);
-      min-height: 44px;
+      width: 100%;
     }
 
-    .youtube-btn:active {
-      transform: scale(0.97);
+    .audio-player {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      outline: none;
+      filter: invert(0.9) hue-rotate(180deg); /* Blends default HTML audio player into dark theme */
     }
 
     /* High Emphasis: A6 Chú Khởi Động */
@@ -327,13 +386,13 @@
       color: var(--text-orange-bold);
       text-align: center;
       font-weight: 800;
-      font-size: clamp(1.12rem, 4.3vw, 1.38rem);
+      font-size: clamp(1.08rem, 2.4vw, 1.32rem);
       line-height: 1.35;
       margin: 14px 0 8px 0;
       padding: 8px 10px;
       background: rgba(255, 171, 145, 0.08);
       border-radius: 8px;
-      border: 1px solid rgba(255, 171, 145, 0.2);
+      border: 1px solid rgba(255, 171, 145, 0.22);
       word-break: break-word;
     }
 
@@ -342,7 +401,7 @@
       color: var(--text-light-green);
       text-align: center;
       font-weight: 800;
-      font-size: clamp(1.15rem, 4.4vw, 1.4rem);
+      font-size: clamp(1.1rem, 2.4vw, 1.35rem);
       line-height: 1.35;
       margin: 10px 0 10px 0;
       padding: 8px 10px;
@@ -357,29 +416,33 @@
 
   <!-- Sticky Header Controls -->
   <header>
-    <div class="header-bar">
-      <span class="app-title">Hoa Nghiêm Thủ Nhãn</span>
-      <span class="counter-pill" id="counterPill">0 / 0</span>
-    </div>
-    <div class="controls-grid">
-      <select id="sttSelect" class="custom-select" onchange="handleFilterSort()">
-        <option value="">Đang tải tất cả bộ lọc...</option>
-      </select>
-      <input 
-        type="search" 
-        id="searchInput" 
-        class="search-box" 
-        placeholder="🔍 Tìm theo tên, chú, pháp bảo..." 
-        oninput="handleFilterSort()"
-      />
+    <div class="header-container">
+      <div class="header-top">
+        <span class="app-title">Hoa Nghiêm Thủ Nhãn</span>
+        <span class="counter-pill" id="counterPill">0 / 0</span>
+      </div>
+      <div class="controls-grid">
+        <select id="sttSelect" class="custom-select" onchange="handleFilterSort()">
+          <option value="">Đang tải tất cả bộ lọc...</option>
+        </select>
+        <input 
+          type="search" 
+          id="searchInput" 
+          class="search-box" 
+          placeholder="🔍 Tìm theo tên, chú, pháp bảo..." 
+          oninput="handleFilterSort()"
+        />
+      </div>
     </div>
   </header>
 
-  <!-- Main Feed -->
-  <main id="app">
-    <div class="status-box" id="statusBox">
-      <div class="spinner"></div>
-      Đang kết nối dữ liệu Google Sheet...
+  <!-- Main Feed Grid -->
+  <main>
+    <div id="cardsGrid">
+      <div class="status-box" id="statusBox">
+        <div class="spinner"></div>
+        Đang kết nối dữ liệu Google Sheet...
+      </div>
     </div>
   </main>
 
@@ -391,7 +454,7 @@
     let allRows = [];
     let filterOptions = [];
 
-    // Helper: Convert Google Drive link or ID to direct thumbnail image URL
+    // Helper: Convert Google Drive URLs/IDs to direct image thumbnails
     function getDriveDirectImageUrl(urlOrId) {
       if (!urlOrId) return '';
       const str = String(urlOrId).trim();
@@ -410,6 +473,33 @@
         return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w800`;
       }
 
+      if (str.startsWith('http://') || str.startsWith('https://')) {
+        return str;
+      }
+      return '';
+    }
+
+    // Helper: Convert Google Drive Audio Link into direct streaming audio source
+    function getDriveDirectAudioUrl(urlOrId) {
+      if (!urlOrId) return '';
+      const str = String(urlOrId).trim();
+      if (!str || str.length < 5) return '';
+
+      // Extract Drive File ID
+      if (/^[a-zA-Z0-9_-]{25,}$/.test(str)) {
+        return `https://docs.google.com/uc?export=open&id=${str}`;
+      }
+
+      const idMatch = str.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+                      str.match(/id=([a-zA-Z0-9_-]+)/) ||
+                      str.match(/\/open\?id=([a-zA-Z0-9_-]+)/) ||
+                      str.match(/\/uc\?id=([a-zA-Z0-9_-]+)/);
+
+      if (idMatch && idMatch[1]) {
+        return `https://docs.google.com/uc?export=open&id=${idMatch[1]}`;
+      }
+
+      // Standard MP3 / audio web link fallback
       if (str.startsWith('http://') || str.startsWith('https://')) {
         return str;
       }
@@ -438,6 +528,7 @@
       return '';
     }
 
+    // 1. Fetch live sheet data
     async function initSheetData() {
       try {
         const res = await fetch(GVIZ_URL);
@@ -449,11 +540,9 @@
           throw new Error('Không có dữ liệu trong bảng.');
         }
 
-        // 1. Collect all header names across cols schema and row 0
         let colHeaders = (json.table.cols || []).map(c => (c && c.label ? c.label.trim() : ''));
         let startRow = 0;
 
-        // Fallback inspect row 0 if schema labels are missing
         if (json.table.rows.length > 0) {
           const row0Cells = json.table.rows[0].c || [];
           const candidateLabels = row0Cells.map(c => c && (c.f || c.v) ? String(c.f || c.v).trim() : '');
@@ -465,7 +554,7 @@
 
         colHeaders = colHeaders.map((h, i) => h || `COL_${i}`);
 
-        // 2. Parse all data rows
+        // Parse rows
         allRows = [];
         for (let r = startRow; r < json.table.rows.length; r++) {
           const rowObj = {};
@@ -475,17 +564,15 @@
             const h = colHeaders[idx] || `COL_${idx}`;
             const val = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== null && cell.v !== undefined ? cell.v : '')) : '';
             rowObj[h] = val;
-            rowObj[`idx_${idx}`] = val; // Also save by index for columns M (12) to Y (24)
+            rowObj[`idx_${idx}`] = val; // Index key for columns M (12) to Y (24)
           });
 
-          // Retain valid rows
           const checkContent = findValue(rowObj, /Thủ Nhãn|C5|WBSID/i) || rowObj['idx_0'] || rowObj['idx_1'];
           if (cleanText(checkContent)) {
             allRows.push(rowObj);
           }
         }
 
-        // 3. Scan and collect ALL 13 STT filters (Columns M to Y / 12 to 24)
         discoverAllFilters(colHeaders);
         buildDropdown();
         handleFilterSort();
@@ -499,27 +586,22 @@
       }
     }
 
-    // Comprehensive detector to guarantee all columns M through Y are discovered
+    // 2. Discover all 13 STT sequence columns (Columns M to Y / 12 to 24)
     function discoverAllFilters(headersList) {
       filterOptions = [];
       const seenKeys = new Set();
 
-      // Check all columns by index from 12 (M) to 24 (Y)
       for (let i = 12; i <= 24; i++) {
-        const colLetter = String.fromCharCode(65 + i); // M, N, O, P, Q, R, S, T, U, V, W, X, Y
+        const colLetter = String.fromCharCode(65 + i);
         const headerName = headersList[i] || '';
         const idxKey = `idx_${i}`;
-
-        // Prefer actual header name if meaningful, otherwise use column index
         const key = (headerName && !headerName.startsWith('COL_')) ? headerName : idxKey;
 
-        // Count how many cards have values in this column
         const validRows = allRows.filter(r => cleanText(r[key]) !== '' || cleanText(r[idxKey]) !== '');
         
         if (validRows.length > 0 && !seenKeys.has(key)) {
           seenKeys.add(key);
           
-          // Clean title for dropdown display
           let displayLabel = headerName;
           if (!displayLabel || displayLabel.startsWith('COL_')) {
             displayLabel = `STT-${colLetter}`;
@@ -535,7 +617,6 @@
         }
       }
 
-      // Also scan any other header explicitly named STT-
       headersList.forEach((h, idx) => {
         if (/^STT[-_ ]/i.test(h) && !seenKeys.has(h) && !/sort|helper/i.test(h)) {
           const count = allRows.filter(r => cleanText(r[h]) !== '').length;
@@ -552,6 +633,7 @@
       });
     }
 
+    // 3. Populate dropdown
     function buildDropdown() {
       const select = document.getElementById('sttSelect');
       select.innerHTML = '';
@@ -573,17 +655,17 @@
       }
     }
 
+    // 4. Filter, Sort, and Render
     function handleFilterSort() {
       const selectedKey = document.getElementById('sttSelect').value || '__ALL__';
       const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
-      const app = document.getElementById('app');
+      const grid = document.getElementById('cardsGrid');
 
       let list = [];
 
       if (selectedKey === '__ALL__') {
         list = [...allRows];
       } else {
-        // Find filter metadata
         const optMeta = filterOptions.find(o => o.key === selectedKey);
         const idxKey = optMeta ? optMeta.idxKey : selectedKey;
 
@@ -606,11 +688,11 @@
       document.getElementById('counterPill').textContent = `${list.length} / ${allRows.length}`;
 
       if (list.length === 0) {
-        app.innerHTML = `<div class="status-box">Không tìm thấy thẻ nào phù hợp.</div>`;
+        grid.innerHTML = `<div class="status-box">Không tìm thấy thẻ nào phù hợp.</div>`;
         return;
       }
 
-      app.innerHTML = list.map(row => {
+      grid.innerHTML = list.map(row => {
         // 1. Top Pill: WBSID - A1 Sự
         const wbsid = findValue(row, /^WBSID$/i) || row['idx_0'] || '';
         const a1Su = findValue(row, /^A1\s*Sự/i) || findValue(row, /Sự/i);
@@ -642,11 +724,15 @@
         const a5TrungDan = findValue(row, /A5.*Trung Dẫn/i);
         const a9KetDan = findValue(row, /A9.*Kết Dẫn/i);
 
-        // 7. High emphasis: A4 Hành, A4 Hành A/B, Audio, A6 Chú KD, A8 Lời KĐ
+        // 7. High emphasis: A4 Hành, A4 Hành A/B, Audio Player, A6 Chú KD, A8 Lời KĐ
         const a4Hanh = findValue(row, /^A4\s*Hành$/i);
         const a4HanhA = findValue(row, /A4.*Hành\s*A/i) || findValue(row, /Hành\s*A/i);
         const a4HanhB = findValue(row, /A4.*Hành\s*B/i) || findValue(row, /Hành\s*B/i);
-        const d1Voice = findValue(row, /D1.*Voice/i) || findValue(row, /Van Voice/i) || findValue(row, /YouTube/i);
+
+        // Audio Stream from D1 Audio Link
+        const rawAudio = findValue(row, /D1.*Audio.*Link/i) || findValue(row, /Audio.*Link/i) || findValue(row, /D1.*Voice/i);
+        const audioSrc = getDriveDirectAudioUrl(rawAudio);
+
         const a6ChuKD = findValue(row, /A6.*Chú Khởi Động/i);
         const a8LoiKD = findValue(row, /A8.*Lời Khẳng Định/i);
 
@@ -700,12 +786,14 @@
               </div>
             ` : ''}
 
-            <!-- YouTube Voice Button -->
-            ${d1Voice ? `
-              <div class="button-container">
-                <a href="${d1Voice}" target="_blank" rel="noopener noreferrer" class="youtube-btn">
-                  <span>▶</span> Nghe trên YouTube
-                </a>
+            <!-- Built-in Google Drive Audio Player (D1 Audio Link) -->
+            ${audioSrc ? `
+              <div class="audio-wrapper">
+                <audio controls class="audio-player" preload="none">
+                  <source src="${audioSrc}" type="audio/mpeg">
+                  <source src="${audioSrc}" type="audio/mp4">
+                  Trình duyệt không hỗ trợ phát âm thanh.
+                </audio>
               </div>
             ` : ''}
 
