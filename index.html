@@ -23,7 +23,6 @@
       --text-peach-soft: #ffccbc;
       --text-orange-bold: #ffab91;
       --text-muted: #90a4ae;
-      --player-bg: #1f2230;
     }
 
     * {
@@ -41,7 +40,7 @@
     }
 
     /* ==========================================================
-       STICKY RESPONSIVE HEADER
+       AUTO-HIDING / FLOATING CONTROL HEADER
        ========================================================== */
     header {
       position: sticky;
@@ -50,17 +49,26 @@
       background: rgba(11, 12, 16, 0.96);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      padding: 12px 18px;
+      padding: 10px 14px;
       border-bottom: 1px solid var(--card-border);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+      will-change: transform;
+    }
+
+    /* Hidden state on scroll down */
+    header.header-hidden {
+      transform: translateY(-105%);
+      opacity: 0;
+      pointer-events: none;
     }
 
     .header-container {
-      max-width: 1400px;
+      max-width: 1000px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .header-top {
@@ -70,30 +78,54 @@
     }
 
     .app-title {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-gold);
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .counter-pill {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       background: rgba(255, 236, 179, 0.15);
       color: var(--text-gold);
       border: 1px solid rgba(255, 236, 179, 0.28);
-      padding: 4px 12px;
+      padding: 3px 10px;
       border-radius: 14px;
       font-weight: 700;
       white-space: nowrap;
     }
 
+    .toggle-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-gold);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
     .controls-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 10px;
+      gap: 8px;
+      transition: max-height 0.3s ease, opacity 0.2s ease;
     }
 
-    /* On Landscape & Desktop, split controls horizontally */
+    .controls-grid.collapsed {
+      display: none;
+    }
+
     @media (min-width: 680px) {
       .header-container {
         flex-direction: row;
@@ -103,8 +135,8 @@
       .controls-grid {
         grid-template-columns: 1.2fr 1fr;
         flex: 1;
-        max-width: 750px;
-        margin-left: 20px;
+        max-width: 640px;
+        margin-left: 16px;
       }
     }
 
@@ -114,68 +146,59 @@
       color: #ffffff;
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 0.95rem;
+      padding: 9px 12px;
+      font-size: 0.92rem;
       outline: none;
-      transition: all 0.2s ease;
+      transition: border-color 0.2s ease;
     }
 
     .custom-select:focus, .search-box:focus {
       border-color: var(--text-gold);
-      box-shadow: 0 0 0 2px rgba(255, 236, 179, 0.2);
     }
 
     .search-box::placeholder {
       color: #78909c;
     }
 
+    /* Floating Quick Restore Button (visible when header is auto-hidden) */
+    #quickFilterBtn {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 99;
+      background: rgba(30, 32, 44, 0.9);
+      border: 1px solid rgba(255, 236, 179, 0.3);
+      color: var(--text-gold);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+      display: none;
+      backdrop-filter: blur(8px);
+    }
+
     /* ==========================================================
-       RESPONSIVE CARD GRID LAYOUT
+       MAIN CARD FEED (ALWAYS SINGLE COLUMN OF CARDS)
        ========================================================== */
     main {
       width: 100%;
-      max-width: 1440px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 16px 12px;
-    }
-
-    #cardsGrid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    /* Landscape phones & small tablets: 2 columns */
-    @media (min-width: 680px) {
-      #cardsGrid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 22px;
-      }
-      main {
-        padding: 20px 16px;
-      }
-    }
-
-    /* Desktop & large screens: 3 columns */
-    @media (min-width: 1120px) {
-      #cardsGrid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-      }
+      padding: 12px 10px;
     }
 
     .status-box {
-      grid-column: 1 / -1;
       text-align: center;
       padding: 70px 16px;
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .spinner {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border: 3px solid rgba(206, 147, 216, 0.2);
       border-top-color: var(--text-purple);
       border-radius: 50%;
@@ -188,26 +211,18 @@
     }
 
     /* ==========================================================
-       CARD STYLING
+       CARD STRUCTURE & ADAPTIVE INTERNAL LAYOUT
        ========================================================== */
     .card {
       background: var(--card-bg);
       border-radius: 18px;
       border: 1px solid var(--card-border);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-      padding: 16px 16px 20px 16px;
+      padding: 16px 14px 20px 14px;
+      margin-bottom: 22px;
       display: flex;
       flex-direction: column;
       position: relative;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    @media (hover: hover) {
-      .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
-        border-color: rgba(255, 236, 179, 0.25);
-      }
     }
 
     /* Full-Width Centered Top Pill */
@@ -215,7 +230,7 @@
       display: block;
       width: 100%;
       text-align: center;
-      font-size: clamp(0.85rem, 2vw, 0.98rem);
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
       color: var(--text-gold);
       background: rgba(255, 236, 179, 0.10);
       border: 1px solid rgba(255, 236, 179, 0.26);
@@ -227,23 +242,58 @@
       word-break: break-word;
     }
 
-    /* Top: A2 Lý (Under Pill) */
+    /* Internal Card Grid Container */
+    .card-body-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+    }
+
+    /* Sub-columns for Landscape & Desktop */
+    .card-col-left, .card-col-right {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    /* On Landscape Mobile, Tablets & Desktop: Split data internally into 2 side-by-side columns */
+    @media (min-width: 680px) {
+      .card {
+        padding: 20px 22px 24px 22px;
+      }
+      .card-body-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 24px;
+        align-items: start;
+      }
+      .card-col-left {
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+        padding-right: 18px;
+      }
+      .card-col-right {
+        padding-left: 6px;
+      }
+    }
+
+    /* Top: A2 Lý */
     .top-ly {
       font-style: italic;
       color: #a5d6a7;
       text-align: center;
-      font-size: clamp(0.84rem, 1.8vw, 0.94rem);
+      font-size: clamp(0.85rem, 1.8vw, 0.95rem);
       line-height: 1.45;
-      margin: 4px 0 10px 0;
-      padding: 0 6px;
+      margin: 2px 0 10px 0;
+      padding: 0 4px;
       opacity: 0.95;
     }
 
-    /* Main Heading: C5 Thủ Nhãn – C1 CTT + C4 Siddham */
+    /* Title: C5 Thủ Nhãn – C1 CTT + C4 Siddham */
     .card-label {
       color: var(--text-purple);
       text-align: center;
-      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+      font-size: clamp(1.28rem, 3.2vw, 1.65rem);
       font-weight: 700;
       line-height: 1.3;
       margin: 4px 0 4px 0;
@@ -295,28 +345,48 @@
       margin: 6px 4px 12px 4px;
     }
 
-    /* Responsive Dual Images */
+    /* Dual Images */
     .image-container {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 12px;
-      margin: 12px 0 16px 0;
+      margin: 10px 0 14px 0;
       width: 100%;
     }
 
     .card-img {
       max-width: 48%;
       height: auto;
-      max-height: 180px;
+      max-height: 175px;
       object-fit: contain;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.03);
-      padding: 5px;
+      padding: 4px;
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* Lesser Emphasis: A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn */
+    /* Audio Player */
+    .audio-wrapper {
+      margin: 10px 0 12px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .audio-player {
+      width: 100%;
+      height: 38px;
+      border-radius: 20px;
+      outline: none;
+      filter: invert(0.9) hue-rotate(180deg);
+    }
+
+    /* ==========================================================
+       LESSER & HIGH EMPHASIS FORMATS
+       ========================================================== */
+    /* Lesser: A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn */
     .lesser-dan {
       color: var(--text-peach-soft);
       text-align: center;
@@ -329,17 +399,17 @@
       opacity: 0.92;
     }
 
-    /* High Emphasis: A4 Hành Header */
+    /* High: A4 Hành Header */
     .chu-header {
       color: var(--text-gold-bright);
       text-align: center;
       font-weight: 800;
       font-size: clamp(1.1rem, 2.4vw, 1.35rem);
-      margin: 14px 0 8px 0;
+      margin: 12px 0 8px 0;
       letter-spacing: 0.3px;
     }
 
-    /* High Emphasis: A4 Hành A & B */
+    /* High: A4 Hành A & B */
     .data-container {
       display: flex;
       justify-content: space-between;
@@ -362,33 +432,14 @@
       word-break: break-word;
     }
 
-    /* ==========================================================
-       AUDIO PLAYER STYLING
-       ========================================================== */
-    .audio-wrapper {
-      margin: 14px 0 12px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-
-    .audio-player {
-      width: 100%;
-      height: 40px;
-      border-radius: 20px;
-      outline: none;
-      filter: invert(0.9) hue-rotate(180deg); /* Blends default HTML audio player into dark theme */
-    }
-
-    /* High Emphasis: A6 Chú Khởi Động */
+    /* High: A6 Chú Khởi Động */
     .chu-KD-bold {
       color: var(--text-orange-bold);
       text-align: center;
       font-weight: 800;
       font-size: clamp(1.08rem, 2.4vw, 1.32rem);
       line-height: 1.35;
-      margin: 14px 0 8px 0;
+      margin: 12px 0 8px 0;
       padding: 8px 10px;
       background: rgba(255, 171, 145, 0.08);
       border-radius: 8px;
@@ -396,7 +447,7 @@
       word-break: break-word;
     }
 
-    /* High Emphasis: A8 Lời Khẳng Định */
+    /* High: A8 Lời Khẳng Định */
     .KD-bold {
       color: var(--text-light-green);
       text-align: center;
@@ -414,16 +465,22 @@
 </head>
 <body>
 
-  <!-- Sticky Header Controls -->
-  <header>
+  <!-- Floating Quick Access Button when Header is auto-hidden -->
+  <button id="quickFilterBtn" onclick="restoreHeader()">⚙️ Bộ lọc & Tìm kiếm</button>
+
+  <!-- Sticky Auto-Hiding Header Controls -->
+  <header id="mainHeader">
     <div class="header-container">
       <div class="header-top">
         <span class="app-title">Hoa Nghiêm Thủ Nhãn</span>
-        <span class="counter-pill" id="counterPill">0 / 0</span>
+        <div class="header-actions">
+          <span class="counter-pill" id="counterPill">0 / 0</span>
+          <button class="toggle-btn" id="toggleCollapseBtn" onclick="toggleControlsCollapse()" title="Ẩn/Hiện thanh tìm kiếm">▼</button>
+        </div>
       </div>
-      <div class="controls-grid">
+      <div class="controls-grid" id="controlsGrid">
         <select id="sttSelect" class="custom-select" onchange="handleFilterSort()">
-          <option value="">Đang tải tất cả bộ lọc...</option>
+          <option value="">Đang tải danh sách bộ lọc...</option>
         </select>
         <input 
           type="search" 
@@ -436,13 +493,11 @@
     </div>
   </header>
 
-  <!-- Main Feed Grid -->
-  <main>
-    <div id="cardsGrid">
-      <div class="status-box" id="statusBox">
-        <div class="spinner"></div>
-        Đang kết nối dữ liệu Google Sheet...
-      </div>
+  <!-- Main Feed Grid (Always Single Card Stack) -->
+  <main id="app">
+    <div class="status-box" id="statusBox">
+      <div class="spinner"></div>
+      Đang kết nối dữ liệu Google Sheet...
     </div>
   </main>
 
@@ -454,7 +509,56 @@
     let allRows = [];
     let filterOptions = [];
 
-    // Helper: Convert Google Drive URLs/IDs to direct image thumbnails
+    // ==========================================================
+    // AUTO-HIDE HEADER ON SCROLL (MOBILE-FRIENDLY MAX REAL ESTATE)
+    // ==========================================================
+    let lastScrollY = window.scrollY;
+    const headerEl = document.getElementById('mainHeader');
+    const quickBtn = document.getElementById('quickFilterBtn');
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+
+      // Only apply auto-hide if scrolled past 80px
+      if (currentScrollY > 80) {
+        if (currentScrollY > lastScrollY + 6) {
+          // Scrolling DOWN -> Hide Header
+          headerEl.classList.add('header-hidden');
+          quickBtn.style.display = 'block';
+        } else if (currentScrollY < lastScrollY - 6) {
+          // Scrolling UP -> Reveal Header
+          headerEl.classList.remove('header-hidden');
+          quickBtn.style.display = 'none';
+        }
+      } else {
+        headerEl.classList.remove('header-hidden');
+        quickBtn.style.display = 'none';
+      }
+
+      lastScrollY = currentScrollY;
+    }, { passive: true });
+
+    function restoreHeader() {
+      headerEl.classList.remove('header-hidden');
+      quickBtn.style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleControlsCollapse() {
+      const grid = document.getElementById('controlsGrid');
+      const btn = document.getElementById('toggleCollapseBtn');
+      if (grid.classList.contains('collapsed')) {
+        grid.classList.remove('collapsed');
+        btn.textContent = '▼';
+      } else {
+        grid.classList.add('collapsed');
+        btn.textContent = '▲';
+      }
+    }
+
+    // ==========================================================
+    // GOOGLE DRIVE URL CONVERTERS
+    // ==========================================================
     function getDriveDirectImageUrl(urlOrId) {
       if (!urlOrId) return '';
       const str = String(urlOrId).trim();
@@ -479,13 +583,11 @@
       return '';
     }
 
-    // Helper: Convert Google Drive Audio Link into direct streaming audio source
     function getDriveDirectAudioUrl(urlOrId) {
       if (!urlOrId) return '';
       const str = String(urlOrId).trim();
       if (!str || str.length < 5) return '';
 
-      // Extract Drive File ID
       if (/^[a-zA-Z0-9_-]{25,}$/.test(str)) {
         return `https://docs.google.com/uc?export=open&id=${str}`;
       }
@@ -499,7 +601,6 @@
         return `https://docs.google.com/uc?export=open&id=${idMatch[1]}`;
       }
 
-      // Standard MP3 / audio web link fallback
       if (str.startsWith('http://') || str.startsWith('https://')) {
         return str;
       }
@@ -517,7 +618,6 @@
       return s;
     }
 
-    // Match column content by pattern
     function findValue(row, pattern) {
       for (const [k, v] of Object.entries(row)) {
         if (pattern.test(k)) {
@@ -528,7 +628,9 @@
       return '';
     }
 
-    // 1. Fetch live sheet data
+    // ==========================================================
+    // 1. DATA INITIALIZATION & FILTER EXTRACTION
+    // ==========================================================
     async function initSheetData() {
       try {
         const res = await fetch(GVIZ_URL);
@@ -554,7 +656,7 @@
 
         colHeaders = colHeaders.map((h, i) => h || `COL_${i}`);
 
-        // Parse rows
+        // Parse data rows
         allRows = [];
         for (let r = startRow; r < json.table.rows.length; r++) {
           const rowObj = {};
@@ -586,7 +688,6 @@
       }
     }
 
-    // 2. Discover all 13 STT sequence columns (Columns M to Y / 12 to 24)
     function discoverAllFilters(headersList) {
       filterOptions = [];
       const seenKeys = new Set();
@@ -633,7 +734,6 @@
       });
     }
 
-    // 3. Populate dropdown
     function buildDropdown() {
       const select = document.getElementById('sttSelect');
       select.innerHTML = '';
@@ -655,11 +755,13 @@
       }
     }
 
-    // 4. Filter, Sort, and Render
+    // ==========================================================
+    // 2. FILTER, SORT & RESPONSIVE CARD RENDERING
+    // ==========================================================
     function handleFilterSort() {
       const selectedKey = document.getElementById('sttSelect').value || '__ALL__';
       const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
-      const grid = document.getElementById('cardsGrid');
+      const app = document.getElementById('app');
 
       let list = [];
 
@@ -688,12 +790,12 @@
       document.getElementById('counterPill').textContent = `${list.length} / ${allRows.length}`;
 
       if (list.length === 0) {
-        grid.innerHTML = `<div class="status-box">Không tìm thấy thẻ nào phù hợp.</div>`;
+        app.innerHTML = `<div class="status-box">Không tìm thấy thẻ nào phù hợp.</div>`;
         return;
       }
 
-      grid.innerHTML = list.map(row => {
-        // 1. Top Pill: WBSID - A1 Sự
+      app.innerHTML = list.map(row => {
+        // Top Pill: WBSID - A1 Sự
         const wbsid = findValue(row, /^WBSID$/i) || row['idx_0'] || '';
         const a1Su = findValue(row, /^A1\s*Sự/i) || findValue(row, /Sự/i);
         
@@ -702,37 +804,36 @@
         else if (cleanText(wbsid)) comboText = cleanText(wbsid);
         else if (cleanText(a1Su)) comboText = cleanText(a1Su);
 
-        // 2. A2 Lý (Under pill)
+        // A2 Lý
         const a2Ly = findValue(row, /^A2\s*Lý/i) || findValue(row, /A2/i);
 
-        // 3. Title components
+        // Title components
         const c5Name = findValue(row, /C5.*Thủ Nhãn.*Tên/i) || findValue(row, /C5.*Tên/i) || findValue(row, /Thủ Nhãn.*Tên/i);
         const c1 = findValue(row, /C1.*Tên.*CTT/i) || findValue(row, /C1.*Tên/i);
         const c4Siddham = findValue(row, /C4.*Siddham.*Unicode/i) || findValue(row, /Siddham/i);
 
-        // 4. Dharma Name, CTT Dài, Giảng Giải
+        // Dharma name, CTT Dài, Giảng Giải
         const dharma = findValue(row, /Dharma Object/i) || findValue(row, /C5.*Object/i);
         const c2Dai = findValue(row, /C2.*Tên Dài/i) || findValue(row, /C2/i);
         const c3Giai = findValue(row, /C3.*Giảng Giải/i) || findValue(row, /C3/i);
 
-        // 5. Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link)
+        // Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link)
         const imgLeft = getDriveDirectImageUrl(findValue(row, /C4.*CTT.*Link/i) || findValue(row, /CTT.*Link/i));
         const imgRight = getDriveDirectImageUrl(findValue(row, /C6.*Pháp Bảo.*Link/i) || findValue(row, /C6/i) || findValue(row, /Pháp Bảo.*Link/i));
 
-        // 6. Lesser emphasis: A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn
+        // Audio Link
+        const rawAudio = findValue(row, /D1.*Audio.*Link/i) || findValue(row, /Audio.*Link/i) || findValue(row, /D1.*Voice/i);
+        const audioSrc = getDriveDirectAudioUrl(rawAudio);
+
+        // Lesser emphasis: A3, A5, A9
         const a3KhaiDan = findValue(row, /A3.*Khai Dẫn/i);
         const a5TrungDan = findValue(row, /A5.*Trung Dẫn/i);
         const a9KetDan = findValue(row, /A9.*Kết Dẫn/i);
 
-        // 7. High emphasis: A4 Hành, A4 Hành A/B, Audio Player, A6 Chú KD, A8 Lời KĐ
+        // High emphasis: A4, A4 Hành A/B, A6, A8
         const a4Hanh = findValue(row, /^A4\s*Hành$/i);
         const a4HanhA = findValue(row, /A4.*Hành\s*A/i) || findValue(row, /Hành\s*A/i);
         const a4HanhB = findValue(row, /A4.*Hành\s*B/i) || findValue(row, /Hành\s*B/i);
-
-        // Audio Stream from D1 Audio Link
-        const rawAudio = findValue(row, /D1.*Audio.*Link/i) || findValue(row, /Audio.*Link/i) || findValue(row, /D1.*Voice/i);
-        const audioSrc = getDriveDirectAudioUrl(rawAudio);
-
         const a6ChuKD = findValue(row, /A6.*Chú Khởi Động/i);
         const a8LoiKD = findValue(row, /A8.*Lời Khẳng Định/i);
 
@@ -742,72 +843,87 @@
             <!-- Full Width Centered Top Pill: WBSID - A1 Sự -->
             ${comboText ? `<div class="full-width-pill">${comboText}</div>` : ''}
 
-            <!-- Smaller text A2 Lý directly under pill -->
-            ${a2Ly ? `<p class="top-ly">${a2Ly}</p>` : ''}
+            <!-- Adaptive Card Body Grid -->
+            <div class="card-body-grid">
+              
+              <!-- LEFT SUB-COLUMN (Title, Images, Explanation, Audio) -->
+              <div class="card-col-left">
+                
+                <!-- A2 Lý (Under pill) -->
+                ${a2Ly ? `<p class="top-ly">${a2Ly}</p>` : ''}
 
-            <!-- Main Heading: Thủ Nhãn + CTT + Siddham -->
-            ${(c5Name || c1 || c4Siddham) ? `
-              <p class="card-label">
-                ${c5Name ? `<span class="tên">${c5Name}</span>` : ''}
-                ${(c5Name && c1) ? `<span class="separator">–</span>` : ''}
-                ${c1 ? `<span class="CTT">${c1}</span>` : ''}
-                ${c4Siddham ? `<span class="siddham">${c4Siddham}</span>` : ''}
-              </p>
-            ` : ''}
+                <!-- Main Heading: Thủ Nhãn + CTT + Siddham -->
+                ${(c5Name || c1 || c4Siddham) ? `
+                  <p class="card-label">
+                    ${c5Name ? `<span class="tên">${c5Name}</span>` : ''}
+                    ${(c5Name && c1) ? `<span class="separator">–</span>` : ''}
+                    ${c1 ? `<span class="CTT">${c1}</span>` : ''}
+                    ${c4Siddham ? `<span class="siddham">${c4Siddham}</span>` : ''}
+                  </p>
+                ` : ''}
 
-            <!-- Dharma Object Name -->
-            ${dharma ? `<p class="name">${dharma}</p>` : ''}
+                <!-- Dharma Object Name -->
+                ${dharma ? `<p class="name">${dharma}</p>` : ''}
 
-            <!-- CTT Dài -->
-            ${c2Dai ? `<p class="CTT-dai">${c2Dai}</p>` : ''}
+                <!-- CTT Dài -->
+                ${c2Dai ? `<p class="CTT-dai">${c2Dai}</p>` : ''}
 
-            <!-- Giảng Giải CTT -->
-            ${c3Giai ? `<p class="chu-thich">${c3Giai}</p>` : ''}
+                <!-- Giảng Giải CTT -->
+                ${c3Giai ? `<p class="chu-thich">${c3Giai}</p>` : ''}
 
-            <!-- Dual Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link) -->
-            ${(imgLeft || imgRight) ? `
-              <div class="image-container">
-                ${imgLeft ? `<img src="${imgLeft}" class="card-img" alt="CTT" loading="lazy" onerror="this.style.display='none'"/>` : ''}
-                ${imgRight ? `<img src="${imgRight}" class="card-img" alt="Pháp Bảo" loading="lazy" onerror="this.style.display='none'"/>` : ''}
+                <!-- Dual Images (Left: C4 CTT Link | Right: C6 Pháp Bảo Link) -->
+                ${(imgLeft || imgRight) ? `
+                  <div class="image-container">
+                    ${imgLeft ? `<img src="${imgLeft}" class="card-img" alt="CTT" loading="lazy" onerror="this.style.display='none'"/>` : ''}
+                    ${imgRight ? `<img src="${imgRight}" class="card-img" alt="Pháp Bảo" loading="lazy" onerror="this.style.display='none'"/>` : ''}
+                  </div>
+                ` : ''}
+
+                <!-- Audio Player -->
+                ${audioSrc ? `
+                  <div class="audio-wrapper">
+                    <audio controls class="audio-player" preload="none">
+                      <source src="${audioSrc}" type="audio/mpeg">
+                      <source src="${audioSrc}" type="audio/mp4">
+                      Trình duyệt không hỗ trợ phát âm thanh.
+                    </audio>
+                  </div>
+                ` : ''}
+
               </div>
-            ` : ''}
 
-            <!-- A3 Khai Dẫn (Lesser emphasis) -->
-            ${a3KhaiDan ? `<p class="lesser-dan">${a3KhaiDan}</p>` : ''}
+              <!-- RIGHT SUB-COLUMN (Khai Dẫn, Hành, Hành A/B, Chú KD, Khẳng Định, Kết Dẫn) -->
+              <div class="card-col-right">
+                
+                <!-- A3 Khai Dẫn (Lesser emphasis) -->
+                ${a3KhaiDan ? `<p class="lesser-dan">${a3KhaiDan}</p>` : ''}
 
-            <!-- A4 Hành Header (High emphasis) -->
-            ${a4Hanh ? `<h5 class="chu-header">${a4Hanh}</h5>` : ''}
+                <!-- A4 Hành Header (High emphasis) -->
+                ${a4Hanh ? `<h5 class="chu-header">${a4Hanh}</h5>` : ''}
 
-            <!-- A4 Hành A & B (High emphasis) -->
-            ${(a4HanhA || a4HanhB) ? `
-              <div class="data-container">
-                ${a4HanhA ? `<div class="chu-col">${a4HanhA}</div>` : ''}
-                ${a4HanhB ? `<div class="chu-col">${a4HanhB}</div>` : ''}
+                <!-- A4 Hành A & B (High emphasis) -->
+                ${(a4HanhA || a4HanhB) ? `
+                  <div class="data-container">
+                    ${a4HanhA ? `<div class="chu-col">${a4HanhA}</div>` : ''}
+                    ${a4HanhB ? `<div class="chu-col">${a4HanhB}</div>` : ''}
+                  </div>
+                ` : ''}
+
+                <!-- A5 Trung Dẫn (Lesser emphasis) -->
+                ${a5TrungDan ? `<p class="lesser-dan">${a5TrungDan}</p>` : ''}
+
+                <!-- A6 Chú Khởi Động (High emphasis) -->
+                ${a6ChuKD ? `<p class="chu-KD-bold">${a6ChuKD}</p>` : ''}
+
+                <!-- A8 Lời Khẳng Định (High emphasis) -->
+                ${a8LoiKD ? `<p class="KD-bold">${a8LoiKD}</p>` : ''}
+
+                <!-- A9 Kết Dẫn (Lesser emphasis) -->
+                ${a9KetDan ? `<p class="lesser-dan">${a9KetDan}</p>` : ''}
+
               </div>
-            ` : ''}
 
-            <!-- Built-in Google Drive Audio Player (D1 Audio Link) -->
-            ${audioSrc ? `
-              <div class="audio-wrapper">
-                <audio controls class="audio-player" preload="none">
-                  <source src="${audioSrc}" type="audio/mpeg">
-                  <source src="${audioSrc}" type="audio/mp4">
-                  Trình duyệt không hỗ trợ phát âm thanh.
-                </audio>
-              </div>
-            ` : ''}
-
-            <!-- A5 Trung Dẫn (Lesser emphasis) -->
-            ${a5TrungDan ? `<p class="lesser-dan">${a5TrungDan}</p>` : ''}
-
-            <!-- A6 Chú Khởi Động (High emphasis) -->
-            ${a6ChuKD ? `<p class="chu-KD-bold">${a6ChuKD}</p>` : ''}
-
-            <!-- A8 Lời Khẳng Định (High emphasis) -->
-            ${a8LoiKD ? `<p class="KD-bold">${a8LoiKD}</p>` : ''}
-
-            <!-- A9 Kết Dẫn (Lesser emphasis) -->
-            ${a9KetDan ? `<p class="lesser-dan">${a9KetDan}</p>` : ''}
+            </div>
 
           </div>
         `;
@@ -818,3 +934,4 @@
   </script>
 </body>
 </html>
+
