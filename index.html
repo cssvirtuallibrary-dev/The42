@@ -386,7 +386,7 @@
     /* ==========================================================
        LESSER & HIGH EMPHASIS FORMATS
        ========================================================== */
-    /* Lesser: A3 Khai Dẫn, A5 Trung Dẫn, A9 Kết Dẫn */
+    /* A3 Khai Dẫn */
     .lesser-dan {
       color: var(--text-peach-soft);
       text-align: center;
@@ -715,11 +715,6 @@
       const select = document.getElementById('sttSelect');
       select.innerHTML = '';
 
-      const allOpt = document.createElement('option');
-      allOpt.value = '__ALL__';
-      allOpt.textContent = `📋 Xem tất cả (${allRows.length} thẻ)`;
-      select.appendChild(allOpt);
-
       filterOptions.forEach(opt => {
         const el = document.createElement('option');
         el.value = opt.key;
@@ -736,14 +731,14 @@
     // 2. FILTER, SORT & RESPONSIVE CARD RENDERING
     // ==========================================================
     function handleFilterSort() {
-      const selectedKey = document.getElementById('sttSelect').value || '__ALL__';
+      const selectedKey = document.getElementById('sttSelect').value || (filterOptions.length > 0 ? filterOptions[0].key : '');
       const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
       const app = document.getElementById('app');
 
       let list = [];
 
-      if (selectedKey === '__ALL__') {
-        list = [...allRows];
+      if (!selectedKey) {
+        list = [];
       } else {
         const optMeta = filterOptions.find(o => o.key === selectedKey);
         const idxKey = optMeta ? optMeta.idxKey : selectedKey;
@@ -802,7 +797,8 @@
         const rawAudio = findValue(row, /D1.*Audio.*Link/i) || findValue(row, /Audio.*Link/i) || findValue(row, /D1.*Voice/i);
         const audioSrc = getDriveDirectAudioUrl(rawAudio);
 
-
+        // A3 Khai Dẫn
+        const a3KhaiDan = findValue(row, /A3.*Khai Dẫn/i);
 
         // High emphasis: A4, A4 Hành A/B, A6, A8
         const a4Hanh = findValue(row, /^A4\s*Hành$/i);
@@ -866,9 +862,12 @@
 
               </div>
 
-              <!-- RIGHT SUB-COLUMN (Hành, Hành A/B, Chú KD, Lời Khẳng Định) -->
+              <!-- RIGHT SUB-COLUMN (Khai Dẫn, Hành, Hành A/B, Chú KD, Lời Khẳng Định) -->
               <div class="card-col-right">
                 
+                <!-- A3 Khai Dẫn -->
+                ${a3KhaiDan ? `<p class="lesser-dan">${a3KhaiDan}</p>` : ''}
+
                 <!-- A4 Hành Header (High emphasis) -->
                 ${a4Hanh ? `<h5 class="chu-header">${a4Hanh}</h5>` : ''}
 
